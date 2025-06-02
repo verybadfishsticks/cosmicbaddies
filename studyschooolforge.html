@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyForge - Your Ultimate Learning Hub</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e0e6ed;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #64ffda;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: #e0e6ed;
+            text-decoration: none;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-menu a:hover {
+            color: #64ffda;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 0.5rem 1rem;
+            color: #e0e6ed;
+            width: 250px;
+        }
+
+        .search-bar::placeholder {
+            color: rgba(224, 230, 237, 0.6);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section {
+            display: none;
+            margin-bottom: 3rem;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23162447" width="1200" height="600"/><circle fill="%2364ffda" opacity="0.1" cx="200" cy="150" r="100"/><circle fill="%23bb86fc" opacity="0.1" cx="800" cy="300" r="150"/><circle fill="%2364ffda" opacity="0.1" cx="1000" cy="100" r="80"/></svg>');
+            background-size: cover;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #64ffda, #bb86fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #64ffda, #bb86fc);
+            color: #1a1a2e;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(100, 255, 218, 0.2);
+        }
+
+        .card h3 {
+            color: #64ffda;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .card i {
+            font-size: 2rem;
+            color: #bb86fc;
+            margin-bottom: 1rem;
+        }
+
+        /* Quiz Styles */
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .question {
+            margin-bottom: 1.5rem;
+        }
+
+        .question h4 {
+            color: #64ffda;
+            margin-bottom: 1rem;
+        }
+
+        .options {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.8rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .option:hover {
+            background: rgba(100, 255, 218, 0.2);
+        }
+
+        .option.selected {
+            background: rgba(100, 255, 218, 0.3);
+            border-color: #64ffda;
+        }
+
+        /* Game Styles */
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .game-card:hover {
+            background: rgba(100, 255, 218, 0.2);
+            transform: scale(1.05);
+        }
+
+        .game-card.flipped {
+            background: rgba(100, 255, 218, 0.3);
+            color: #1a1a2e;
+        }
+
+        /* Map Container */
+        .map-container {
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(26, 26, 46, 0.95);
+            padding: 3rem 0 1rem;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #64ffda;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: #e0e6ed;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: #64ffda;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 2rem;
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .search-bar {
+                width: 200px;
+            }
+            
+            .game-board {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section.active {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        /* Study Timer */
+        .timer-display {
+            font-size: 3rem;
+            text-align: center;
+            color: #64ffda;
+            margin: 2rem 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #64ffda, #bb86fc);
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/studyforge.html" class="logo">
+                <i class="fas fa-graduation-cap"></i> StudyForge
+            </a>
+            <ul class="nav-menu">
+                <li><a onclick="showSection('home')">Home</a></li>
+                <li><a onclick="showSection('resources')">Resources</a></li>
+                <li><a onclick="showSection('schools')">Find Schools</a></li>
+                <li><a onclick="showSection('quiz')">Quiz</a></li>
+                <li><a onclick="showSection('games')">Games</a></li>
+                <li><a onclick="showSection('lessons')">Lessons</a></li>
+                <li><a onclick="showSection('tips')">Study Tips</a></li>
+            </ul>
+            <div class="search-container">
+                <input type="text" class="search-bar" placeholder="Search lessons, tips..." id="searchInput">
+                <i class="fas fa-search" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #64ffda;"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Home Section -->
+            <section id="home" class="section active">
+                <div class="hero">
+                    <h1>Welcome to StudyForge</h1>
+                    <p>Your ultimate learning companion for academic success</p>
+                    <button class="btn" onclick="showSection('lessons')">Start Learning</button>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <i class="fas fa-book-open"></i>
+                        <h3>Interactive Lessons</h3>
+                        <p>Comprehensive lessons across all subjects with interactive elements and real-time feedback.</p>
+                    </div>
+                    <div class="card">
+                        <i class="fas fa-gamepad"></i>
+                        <h3>Educational Games</h3>
+                        <p>Learn through fun and engaging games designed to reinforce key concepts.</p>
+                    </div>
+                    <div class="card">
+                        <i class="fas fa-lightbulb"></i>
+                        <h3>Study Tips</h3>
+                        <p>Expert advice and proven strategies to maximize your learning potential.</p>
+                    </div>
+                    <div class="card">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>School Finder</h3>
+                        <p>Locate nearby schools and educational institutions with our interactive map.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Resources Section -->
+            <section id="resources" class="section">
+                <h2 style="color: #64ffda; margin-bottom: 2rem; font-size: 2.5rem;">Educational Resources</h2>
+                
+                <div class="grid">
+                    <div class="card">
+                        <i class="fas fa-calculator"></i>
+                        <h3>Mathematics</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li><a href="https://www.khanacademy.org/math" target="_blank" style="color: #e0e6ed; text-decoration: none;">Khan Academy Math</a></li>
+                            <li><a href="https://www.wolframalpha.com" target="_blank" style="color: #e0e6ed; text-decoration: none;">Wolfram Alpha</a></li>
+                            <li><a href="https://www.mathway.com" target="_blank" style="color: #e0e6ed; text-decoration: none;">Mathway Calculator</a></li>
+                            <li><a href="https://www.geogebra.org" target="_blank" style="color: #e0e6ed; text-decoration: none;">GeoGebra</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <i class="fas fa-flask"></i>
+                        <h3>Science</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li><a href="https://www.nasa.gov/audience/forstudents/" target="_blank" style="color: #e0e6ed; text-decoration: none;">NASA Student Resources</a></li>
+                            <li><a href="https://phet.colorado.edu" target="_blank" style="color: #e0e6ed; text-decoration: none;">PhET Simulations</a></li>
+                            <li><a href="https://www.nationalgeographic.org/education/" target="_blank" style="color: #e0e6ed; text-decoration: none;">National Geographic Education</a></li>
+                            <li><a href="https://www.scientificamerican.com/education/" target="_blank" style="color: #e0e6ed; text-decoration: none;">Scientific American</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <i class="fas fa-globe"></i>
+                        <h3>Languages</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li><a href="https://www.duolingo.com" target="_blank" style="color: #e0e6ed; text-decoration: none;">Duolingo</a></li>
+                            <li><a href="https://www.babbel.com" target="_blank" style="color: #e0e6ed; text-decoration: none;">Babbel</a></li>
+                            <li><a href="https://www.memrise.com" target="_blank" style="color: #e0e6ed; text-decoration: none;">Memrise</a></li>
+                            <li><a href="https://www.busuu.com" target="_blank" style="color: #e0e6ed; text-decoration: none;">Busuu</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <i class="fas fa-landmark"></i>
+                        <h3>History & Social Studies</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li><a href="https://www.history.com" target="_blank" style="color: #e0e6ed; text-decoration: none;">History Channel</a></li>
+                            <li><a href="https://www.smithsonianmag.com" target="_blank" style="color: #e0e6ed; text-decoration: none;">Smithsonian Magazine</a></li>
+                            <li><a href="https://www.bbc.co.uk/history" target="_blank" style="color: #e0e6ed; text-decoration: none;">BBC History</a></li>
+                            <li><a href="https://www.loc.gov/teachers/" target="_blank" style="color: #e0e6ed; text-decoration: none;">Library of Congress</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Schools Section -->
+            <section id="schools" class="section">
+                <h2 style="color: #64ffda; margin-bottom: 2rem; font-size: 2.5rem;">Find Nearby Schools</h2>
+                
+                <div class="card">
+                    <h3>School Locator</h3>
+                    <p>Enter your location to find schools near you:</p>
+                    <input type="text" id="locationInput" placeholder="Enter your city or zip code" style="width: 100%; padding: 0.8rem; margin: 1rem 0; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: #e0e6ed;">
+                    <button class="btn" onclick="findSchools()">Find Schools</button>
+                </div>
+                
+                <div class="map-container" id="mapContainer">
+                    <div style="text-align: center;">
+                        <i class="fas fa-map-marked-alt" style="font-size: 3rem; color: #64ffda; margin-bottom: 1rem;"></i>
+                        <p>Interactive map will appear here</p>
+                        <p style="font-size: 0.9rem; opacity: 0.7;">Enter a location above to view nearby schools</p>
+                    </div>
+                </div>
+                
+                <div id="schoolsList" class="grid" style="margin-top: 2rem;"></div>
+            </section>
+
+            <!-- Quiz Section -->
+            <section id="quiz" class="section">
+                <h2 style="color: #64ffda; margin-bottom: 2rem; font-size: 2.5rem;">Knowledge Quiz</h2>
+                
+                <div class="quiz-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="quizProgress"></div>
+                    </div>
+                    
+                    <div id="quizContent">
+                        <div class="question">
+                            <h4>Question 1: What is the capital of France?</h4>
+                            <div class="options">
+                                <div class="option" onclick="selectOption(this, false)">London</div>
+                                <div class="option" onclick="selectOption(this, true)">Paris</div>
+                                <div class="option" onclick="selectOption(this, false)">Berlin</div>
+                                <div class="option" onclick="selectOption(this, false)">Madrid</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button class="btn" onclick="nextQuestion()">Next Question</button>
+                        <button class="btn" onclick="resetQuiz()" style="margin-left: 1rem; background: rgba(255,255,255,0.1);">Reset Quiz</button>
+                    </div>
+                    
+                    <div id="quizResults" style="text-align: center; margin-top: 2rem; display: none;">
+                        <h3 style="color: #64ffda;">Quiz Complete!</h3>
+                        <p id="scoreDisplay"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Games Section -->
+            <section id="games" class="section">
+                <h2 style="color: #64ffda; margin-bottom: 2rem; font-size: 2.5rem;">Educational Games</h2>
+                
+                <div class="card">
+                    <h3>Memory Match - Math Edition</h3>
+                    <p>Match the equations with their answers!</p>
+                    <button class="btn" onclick="startMemoryGame()">Start Game</button>
+                    
+                    <div class="game-board" id="memoryGame" style="display: none;">
+                        <!-- Game cards will be generated here -->
+                    </div>
+                    
+                    <div id="gameScore" style="text-align: center; margin-top: 1rem; display: none;">
+                        <p>Score: <span id="score">0</span> | Moves: <span id="moves">0</span></p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Word Builder</h3>
+                    <p>Create words from the given letters:</p>
+                    <div id="letterPool" style="text-align: center; margin: 1rem 0; font-size: 1.5rem; letter-spacing: 0.5rem;">
+                        S T U D Y F O R G E
+                    </div>
+                    <input type="text" id="wordInput" placeholder="Type your word here" style="width: 100%; padding: 0.8rem; margin: 1rem 0; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: #e0e6ed;">
+                    <button class="btn" onclick="checkWord()">Check Word</button>
+                    <div id="wordResults" style="margin-top: 1rem;"></div>
+                </div>
+            </section>
+
+            <!-- Lessons Section -->
+            <section id="lessons" class="section">
+                <h2 style="color: #64ffda; margin-bottom: 2rem; font-size: 2.5rem;">Interactive Lessons</h2>
+                
+                <div class="grid">
+                    <div class="card">
+                        <i class="fas fa-calculator"></i>
+                        <h3>Mathematics</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 0.5rem 0;"><a href="#" onclick="openLesson('algebra')" style="color: #64ffda; text-decoration: none;">• Algebra Basics</a></li>
+                            <li style="margin: 0.5rem 0;"><a href="#" onclick="openLesson('geometry')" style="color: #64ffda; text-decoration: none;">• Geometry Fundamentals</a></li>
+                            <li style="margin: 0.5rem 0;"><a href="#" onclick="openLesson('calculus')" style="color: #64ffda; text-decoration: none;">• Introduction to Calculus</a></li>
+                            <li style="margin: 0.5rem 0;"><a href="#" onclick="openLesson('statistics')" style="color: #64ffda; text-decoration: none;">• Statistics & Probability</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <i class="fas fa-atom"></i>
+                        <h3>Science</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 0.5rem 0;"><a href="#" onclick="openLesson('physics')" style="color: #64ffda; text-decoration: none;">• Physics Principles</a></li>
+                            <li style="margin: 0.5rem 0;"><a href="#" onclick="openLesson('chemistry')" style="color: #64ffda; text-decoration: none;">• Chemistry Basics</a></li>
+                            <li style="margin: 0.5rem 0;"><a href="#" onclick="openLesson('biology')" style="color: #64ffda; text-decoration: none;">• Biology Essentials</a></li>
+                            <li style="margin: 0.5rem 0;"><a href="#" onclick="openLesson('earth-science')" style="color: #64ffda; text-decoration: none;">• Earth Science</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <i class="fas fa-book"></i>
+                        <h3>Literature</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 0.5rem 0;"><a href="#" onclick="openLesson('grammar')" style="color: #64ffda; text-decoration: none;">• Grammar & Writing</a></li>
+                            <li style="margin: 0.5rem 0;"><a href="#" onclick="openLesson('poetry')" style="color: #64ffda; text-decoration: none;">• Poetry Analysis</a></li>
+                            <li style="margin: 0.5rem 0;"><a href="#" onclick="openLesson('classics')" style="color: #64ffda; text-decoration: none;">• Classic Literature</a></li>
+                            <li style="margin: 0.5rem 0;"><a href="#" onclick="openLesson('creative-writing')" style="color: #64ffda; text-decoration: none;">• Creative Writing</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <i class="fas fa-globe-americas"></i>
+                        <h3>Social Studies</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 0.5rem 0;"><a href="#" onclick="openLesson('world-history')" style="color: #64ffda; text-decoration: none;">• World History</a></li>
+                            <li style="margin: 0.5rem 0;"><a href="#" onclick="openLesson('geography')" style="color: #64ffda; text-decoration: none;">• Geography</a></li>
+                            <li style="margin: 0.5rem 0;"><a href="#" onclick="openLesson('civics')" style="color: #64ffda; text-decoration: none;">• Civics & Government</a></li>
+                            <li style="margin: 0.5rem 0;"><a href="#" onclick="openLesson('economics')" style="color: #64ffda; text-decoration: none;">• Economics Basics</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Study Timer -->
+                <div class="card" style="margin-top: 2rem;">
+                    <h3>Study Timer</h3>
+                    <p>Use the Pomodoro Technique for effective studying</p>
+                    <div class="timer-display" id="timerDisplay">25:00</div>
+                    <div class="timer-controls">
+                        <button class="btn" onclick="startTimer()">Start</button>
+                        <button class="btn" onclick="pauseTimer()" style="background: rgba(255,255,255,0.1);">Pause</button>
+                        <button class="btn" onclick="resetTimer()" style="background: rgba(255,255,255,0.1);">Reset</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tips Section -->
+            <section id="tips" class="section">
+                <h2 style="color: #64ffda; margin-bottom: 2rem; font-size: 2.5rem;">Study & Homework Tips</h2>
+                
+                <div class="grid">
+                    <div class="card">
+                        <i class="fas fa-brain"></i>
+                        <h3>Study Techniques</h3>
+                        <ul>
+                            <li><strong>Pomodoro Technique:</strong> Study for 25 minutes, then take a 5-minute break</li>
+                            <li><strong>Active Recall:</strong> Test yourself instead of just re-reading notes</li>
+                            <li><strong>Spaced Repetition:</strong> Review material at increasing intervals</li>
+                            <li><strong>Feynman Technique:</strong> Explain concepts in simple terms</li>
+                            <li><strong>Mind Mapping:</strong> Create visual connections between ideas</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <i class="fas fa-clipboard-check"></i>
+                        <h3>Homework Strategies</h3>
+                        <ul>
+                            <li><strong>Prioritize Tasks:</strong> Start with the most important or difficult assignments</li>
+                            <li><strong>Break It Down:</strong> Divide large projects into smaller, manageable tasks</li>
+                            <li><strong>Set Deadlines:</strong> Create personal deadlines before the actual due date</li>
+                            <li><strong>Eliminate Distractions:</strong> Find a quiet, dedicated study space</li>
+                            <li><strong>Use a Planner:</strong> Keep track of all assignments and due dates</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <i class="fas fa-clock"></i>
+                        <h3>Time Management</h3>
+                        <ul>
+                            <li><strong>Create a Schedule:</strong> Plan your study time and stick to it</li>
+                            <li><strong>Use Time Blocks:</strong> Dedicate specific hours to specific subjects</li>
+                            <li><strong>Avoid Multitasking:</strong> Focus on one task at a time</li>
+                            <li><strong>Take Regular Breaks:</strong> Your brain needs time to process information</li>
+                            <li><strong>Review Weekly:</strong> Assess your progress and adjust your schedule</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h3>Test Preparation</h3>
+                        <ul>
+                            <li><strong>Start Early:</strong> Begin studying weeks before the test</li>
+                            <li><strong>Practice Tests:</strong> Take mock exams to identify weak areas</li>
+                            <li><strong>Study Groups:</strong> Collaborate with classmates for different perspectives</li>
+                            <li><strong>Get Enough Sleep:</strong> Your brain consolidates memory during sleep</li>
+                            <li><strong>Stay Calm:</strong> Use relaxation techniques to manage test anxiety</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <i class="fas fa-lightbulb"></i>
+                        <h3>Memory Enhancement</h3>
+                        <ul>
+                            <li><strong>Use Mnemonics:</strong> Create memorable phrases or acronyms</li>
+                            <li><strong>Visual Learning:</strong> Use diagrams, charts, and color coding</li>
+                            <li><strong>Teach Others:</strong> Explaining concepts helps reinforce your understanding</li>
+                            <li><strong>Connect to Prior Knowledge:</strong> Link new information to what you already know</li>
+                            <li><strong>Practice Retrieval:</strong> Regularly test your memory without looking at notes</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <i class="fas fa-heart"></i>
+                        <h3>Wellness & Balance</h3>
+                        <ul>
+                            <li><strong>Stay Hydrated:</strong> Drink plenty of water throughout the day</li>
+                            <li><strong>Exercise Regularly:</strong> Physical activity improves cognitive function</li>
+                            <li><strong>Eat Brain Food:</strong> Include nuts, fish, and fruits in your diet</li>
+                            <li><strong>Manage Stress:</strong> Practice meditation or deep breathing exercises</li>
+                            <li><strong>Maintain Social Connections:</strong> Don't isolate yourself while studying</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>StudyForge</h3>
+                <p>Empowering students with the tools and resources they need to succeed academically.</p>
+                <div style="margin-top: 1rem;">
+                    <i class="fab fa-facebook" style="margin-right: 1rem; color: #64ffda; cursor: pointer;"></i>
+                    <i class="fab fa-twitter" style="margin-right: 1rem; color: #64ffda; cursor: pointer;"></i>
+                    <i class="fab fa-instagram" style="margin-right: 1rem; color: #64ffda; cursor: pointer;"></i>
+                    <i class="fab fa-youtube" style="color: #64ffda; cursor: pointer;"></i>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#" onclick="showSection('home')">Home</a></li>
+                    <li><a href="#" onclick="showSection('lessons')">Lessons</a></li>
+                    <li><a href="#" onclick="showSection('quiz')">Quiz</a></li>
+                    <li><a href="#" onclick="showSection('games')">Games</a></li>
+                    <li><a href="#" onclick="showSection('tips')">Study Tips</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#" onclick="showSection('resources')">Educational Links</a></li>
+                    <li><a href="#" onclick="showSection('schools')">Find Schools</a></li>
+                    <li><a href="#">Study Guides</a></li>
+                    <li><a href="#">Practice Tests</a></li>
+                    <li><a href="#">Homework Help</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> info@studyforge.edu</li>
+                    <li><i class="fas fa-phone"></i> (555) 123-4567</li>
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Education St, Learning City</li>
+                    <li><a href="#">Support Center</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 StudyForge. All rights reserved. | <a href="#" style="color: #64ffda;">Privacy Policy</a> | <a href="#" style="color: #64ffda;">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            // Simple search implementation - you can expand this
+            if (searchTerm.includes('math') || searchTerm.includes('algebra')) {
+                showSection('lessons');
+            } else if (searchTerm.includes('tip') || searchTerm.includes('study')) {
+                showSection('tips');
+            } else if (searchTerm.includes('quiz') || searchTerm.includes('test')) {
+                showSection('quiz');
+            } else if (searchTerm.includes('game')) {
+                showSection('games');
+            }
+        });
+
+        // Quiz functionality
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedAnswer = null;
+
+        const quizQuestions = [
+            {
+                question: "What is the capital of France?",
+                options: ["London", "Paris", "Berlin", "Madrid"],
+                correct: 1
+            },
+            {
+                question: "What is 2 + 2?",
+                options: ["3", "4", "5", "6"],
+                correct: 1
+            },
+            {
+                question: "Who wrote 'Romeo and Juliet'?",
+                options: ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
+                correct: 1
+            },
+            {
+                question: "What is the largest planet in our solar system?",
+                options: ["Earth", "Mars", "Jupiter", "Saturn"],
+                correct: 2
+            },
+            {
+                question: "What is the chemical symbol for water?",
+                options: ["H2O", "CO2", "NaCl", "O2"],
+                correct: 0
+            }
+        ];
+
+        function selectOption(element, isCorrect) {
+            // Remove previous selections
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedAnswer = isCorrect;
+        }
+
+        function nextQuestion() {
+            if (selectedAnswer !== null) {
+                if (selectedAnswer) score++;
+                currentQuestion++;
+                
+                if (currentQuestion < quizQuestions.length) {
+                    loadQuestion();
+                } else {
+                    showQuizResults();
+                }
+                selectedAnswer = null;
+            } else {
+                alert('Please select an answer!');
+            }
+        }
+
+        function loadQuestion() {
+            const question = quizQuestions[currentQuestion];
+            const progress = ((currentQuestion + 1) / quizQuestions.length) * 100;
+            document.getElementById('quizProgress').style.width = progress + '%';
+            
+            document.getElementById('quizContent').innerHTML = `
+                <div class="question">
+                    <h4>Question ${currentQuestion + 1}: ${question.question}</h4>
+                    <div class="options">
+                        ${question.options.map((option, index) => 
+                            `<div class="option" onclick="selectOption(this, ${index === question.correct})">${option}</div>`
+                        ).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function showQuizResults() {
+            document.getElementById('quizContent').style.display = 'none';
+            document.getElementById('quizResults').style.display = 'block';
+            document.getElementById('scoreDisplay').textContent = `You scored ${score} out of ${quizQuestions.length}!`;
+        }
+
+        function resetQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            selectedAnswer = null;
+            document.getElementById('quizContent').style.display = 'block';
+            document.getElementById('quizResults').style.display = 'none';
+            document.getElementById('quizProgress').style.width = '0%';
+            loadQuestion();
+        }
+
+        // Memory Game
+        let gameCards = [];
+        let flippedCards = [];
+        let gameScore = 0;
+        let moves = 0;
+
+        function startMemoryGame() {
+            const equations = [
+                {question: "2+2", answer: "4"},
+                {question: "3×3", answer: "9"},
+                {question: "10÷2", answer: "5"},
+                {question: "7-3", answer: "4"},
+                {question: "5+3", answer: "8"},
+                {question: "6×2", answer: "12"},
+                {question: "15÷3", answer: "5"},
+                {question: "9-1", answer: "8"}
+            ];
+
+            gameCards = [];
+            equations.forEach(eq => {
+                gameCards.push({type: 'question', value: eq.question, match: eq.answer});
+                gameCards.push({type: 'answer', value: eq.answer, match: eq.question});
+            });
+
+            // Shuffle cards
+            gameCards = gameCards.sort(() => Math.random() - 0.5);
+
+            const gameBoard = document.getElementById('memoryGame');
+            gameBoard.innerHTML = '';
+            gameBoard.style.display = 'grid';
+
+            gameCards.forEach((card, index) => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'game-card';
+                cardElement.textContent = '?';
+                cardElement.onclick = () => flipCard(cardElement, index);
+                gameBoard.appendChild(cardElement);
+            });
+
+            document.getElementById('gameScore').style.display = 'block';
+            gameScore = 0;
+            moves = 0;
+            flippedCards = [];
+            updateGameScore();
+        }
+
+        function flipCard(element, index) {
+            if (flippedCards.length < 2 && !element.classList.contains('flipped')) {
+                element.classList.add('flipped');
+                element.textContent = gameCards[index].value;
+                flippedCards.push({element, index});
+
+                if (flippedCards.length === 2) {
+                    moves++;
+                    updateGameScore();
+                    setTimeout(checkMatch, 1000);
+                }
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            
+            if (gameCards[card1.index].match === gameCards[card2.index].value) {
+                gameScore++;
+                updateGameScore();
+            } else {
+                card1.element.classList.remove('flipped');
+                card2.element.classList.remove('flipped');
+                card1.element.textContent = '?';
+                card2.element.textContent = '?';
+            }
+            
+            flippedCards = [];
+        }
+
+        function updateGameScore() {
+            document.getElementById('score').textContent = gameScore;
+            document.getElementById('moves').textContent = moves;
+        }
+
+        // Word Game
+        const validWords = ['study', 'forge', 'student', 'grade', 'test', 'read', 'try', 'get', 'for', 'dog', 'god', 'red', 'go', 'to', 'so', 'do'];
+
+        function checkWord() {
+            const word = document.getElementById('wordInput').value.toLowerCase();
+            const results = document.getElementById('wordResults');
+            
+            if (validWords.includes(word)) {
+                results.innerHTML = `<p style="color: #64ffda;">✓ "${word}" is a valid word!</p>`;
+            } else {
+                results.innerHTML = `<p style="color: #ff6b6b;">✗ "${word}" is not a valid word. Try again!</p>`;
+            }
+            
+            document.getElementById('wordInput').value = '';
+        }
+
+        // Study Timer
+        let timerInterval;
+        let timeLeft = 25 * 60; // 25 minutes in seconds
+        let isRunning = false;
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        isRunning = false;
+                        alert('Time\'s up! Take a 5-minute break.');
+                        timeLeft = 5 * 60; // 5-minute break
+                        updateTimerDisplay();
+                    }
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            timeLeft = 25 * 60;
+            updateTimerDisplay();
+        }
+
+        // School Finder
+        function findSchools() {
+            const location = document.getElementById('locationInput').value;
+            const schoolsList = document.getElementById('schoolsList');
+            
+            if (location) {
+                // Simulate finding schools
+                const mockSchools = [
+                    {name: 'Lincoln High School', address: '123 Main St', rating: 4.5},
+                    {name: 'Washington Elementary', address: '456 Oak Ave', rating: 4.2},
+                    {name: 'Roosevelt Middle School', address: '789 Pine Rd', rating: 4.0},
+                    {name: 'Jefferson Academy', address: '321 Elm St', rating: 4.7}
+                ];
+
+                schoolsList.innerHTML = mockSchools.map(school => `
+                    <div class="card">
+                        <h3>${school.name}</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> ${school.address}</p>
+                        <p><i class="fas fa-star"></i> Rating: ${school.rating}/5</p>
+                        <button class="btn" onclick="getDirections('${school.name}')">Get Directions</button>
+                    </div>
+                `).join('');
+
+                // Update map placeholder
+                document.getElementById('mapContainer').innerHTML = `
+                    <div style="text-align: center;">
+                        <i class="fas fa-map-marked-alt" style="font-size: 3rem; color: #64ffda; margin-bottom: 1rem;"></i>
+                        <p>Showing schools near: ${location}</p>
+                        <p style="font-size: 0.9rem; opacity: 0.7;">Interactive map with ${mockSchools.length} schools found</p>
+                    </div>
+                `;
+            } else {
+                alert('Please enter a location!');
+            }
+        }
+
+        function getDirections(schoolName) {
+            alert(`Getting directions to ${schoolName}...`);
+        }
+
+        // Lesson opener
+        function openLesson(lessonType) {
+            alert(`Lessons are coming soon, please wait!`);
+        }
+
+        // Initialize
+        updateTimerDisplay();
+    </script>
+</body>
+</html>

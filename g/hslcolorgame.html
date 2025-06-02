@@ -1,0 +1,193 @@
+ <div class="container">
+  <h1>HSL Color Game</h1>
+  <style>
+  body {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 2em 1em;
+  
+  height: 100%;
+  
+  font-family: 'Inter', sans-serif;
+  text-align: center;
+  background-color: black;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 2em;
+  
+  background-color: black;
+  padding: 4em;
+  border-radius: 20px;
+}
+
+#game {
+  display: grid;
+  grid-auto-flow:column dense;
+  grid-template-rows: 110px 110px;
+  grid-auto-columns: 110px;
+  
+  
+}
+
+.square {
+  width: 100px;
+  height: 100px;
+  display: inline-block;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 10px;
+  box-sizing: border-box;
+  
+  background-color: hsl(212, 100%, 63%);
+}
+
+.diff {
+  background-color: hsl(212, 100%, 40%);
+}
+
+h1 {
+  font-size: 40px;
+  font-weight: 900;
+  margin: 0;
+  color: white;
+}
+
+div, p {
+  font-weight: 400;
+  font-size: 20px;
+  color: white;
+}
+
+#score {
+  text-align: center;
+  line-height: 2;
+  padding: 1em 3em;
+  border: 1px solid hsl(0, 0%, 93%);
+  border-radius: 10px;
+}
+
+#try-again {
+  padding: 1em 3em;
+  background-color: hsl(0, 0%, 93%);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: none;
+}
+
+#try-again:hover {
+  background-color: black;
+  transition: background-color 0.3s ease;
+}
+  </style>
+  <p>Find the block with a different shade or brightness.</p>
+  <div id="game"></div>
+  <div id="score">Pick a block to play.</div>
+  <div id="try-again"></div>
+</div>
+<script>
+const gameContainer = document.getElementById("game");
+let score = 0;
+let highScore = 0;
+
+generateSquares();
+
+function generateSquares() {
+  gameContainer.innerHTML = "";
+  
+  const similarHue = Math.floor(Math.random() * 360);
+  
+  const similarSaturation = Math.floor(Math.random() * 21) + 80;
+  const similarLightness = Math.floor(Math.random() * 21) + 40;
+  
+  const differentSaturation = Math.floor(Math.random() * 21) + 80;
+  const differentLightness = Math.floor(Math.random() * 21) + 40;
+  
+  const squares = [];
+  for (let i = 0; i < 5; i++) {
+    const square = document.createElement("div");
+    square.classList.add("square");
+    
+    square.style.backgroundColor = `hsl(${similarHue}, ${similarSaturation}%, ${similarLightness}%)`;
+    
+    square.addEventListener("click", handleWrong);
+    square.addEventListener("click", () => {
+      differentSquare.style.outline = '5px solid hsl(0, 0%, 85%)';
+    });
+    squares.push(square);
+  }
+  
+  const differentSquare = document.createElement("div");
+  differentSquare.classList.add("square");
+  
+  differentSquare.style.backgroundColor = `hsl(${similarHue}, ${differentSaturation}%, ${differentLightness}%)`;
+  
+  differentSquare.addEventListener("click", handleCorrect);
+  squares.push(differentSquare);
+  
+  shuffleArray(squares);
+  
+  squares.forEach((square) => {
+    gameContainer.appendChild(square);
+  });
+}
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+function tryAgain() {
+  const tryAgainButton = document.getElementById("try-again");
+  tryAgainButton.style.display = "block";
+  tryAgainButton.innerHTML = `Try Again`;
+  tryAgainButton.addEventListener("click", () => {
+    generateSquares();
+    score = 0;
+    const scoreDisplay = document.getElementById("score");
+    scoreDisplay.innerHTML = `Your Score: <b>${score}</b>`;
+    game.style.pointerEvents = "auto";
+    tryAgainButton.innerHTML = ``;
+    tryAgainButton.style.display = "none";
+  })
+}
+
+function handleCorrect() {
+  score++;
+  const scoreDisplay = document.getElementById("score");
+  scoreDisplay.innerHTML = `Your Score: <b>${score}</b>`;
+  generateSquares();
+}
+
+
+function handleWrong() {
+  const game = document.getElementById("game");
+  game.style.pointerEvents = "none";
+  const scoreDisplay = document.getElementById("score");
+  let message = `Oh no! Game over :(<br>Last Score: <b>${score}</b>`;
+  
+  if (score > highScore) {
+    highScore = score;
+    message = `Good job! New High Score: <b>${highScore}</b>`;
+  } else {
+    message += `<br>Highest Score: <b>${highScore}</b>`;
+  }
+  
+  if (score > 4) {
+    message += `<br><br>Don't forget to share your score with others!`;
+  }
+  
+  scoreDisplay.innerHTML = message;
+  tryAgain();
+}
+
+</script>

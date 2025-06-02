@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Encyclopedia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #0a0a0f;
+            --secondary-bg: #1a1a2e;
+            --accent-bg: #16213e;
+            --text-primary: #e8e8f0;
+            --text-secondary: #b8b8d0;
+            --accent-color: #64ffda;
+            --accent-purple: #bb86fc;
+            --accent-blue: #4fc3f7;
+            --border-color: #2a2a40;
+            --hover-bg: #2a2a40;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated starfield background */
+        .starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            padding: 1rem 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--accent-color), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 2rem;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            margin-top: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1001;
+        }
+
+        .search-result-item {
+            padding: 0.8rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s ease;
+        }
+
+        .search-result-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            padding: 0.6rem 1.2rem;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--accent-color);
+            color: var(--primary-bg);
+            box-shadow: 0 0 15px rgba(100, 255, 218, 0.4);
+        }
+
+        /* Main content */
+        .main-container {
+            display: flex;
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+        }
+
+        .sidebar {
+            width: 300px;
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            height: calc(100vh - 80px);
+            position: sticky;
+            top: 80px;
+        }
+
+        .sidebar h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .toc-category {
+            margin-bottom: 1.5rem;
+        }
+
+        .toc-item {
+            padding: 0.5rem 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 5px;
+            padding-left: 1rem;
+        }
+
+        .toc-item:hover {
+            background: var(--hover-bg);
+            color: var(--accent-color);
+            padding-left: 1.5rem;
+        }
+
+        .content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 900px;
+        }
+
+        .article {
+            background: rgba(26, 26, 46, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .article h1 {
+            color: var(--accent-color);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--accent-color), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .article h2 {
+            color: var(--accent-purple);
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem 0;
+        }
+
+        .article h3 {
+            color: var(--accent-blue);
+            font-size: 1.4rem;
+            margin: 1.5rem 0 0.8rem 0;
+        }
+
+        .article p {
+            margin-bottom: 1.2rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .article ul, .article ol {
+            margin: 1rem 0 1rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .article li {
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--accent-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Settings panel */
+        .settings-panel {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 2rem;
+            z-index: 2000;
+            width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .settings-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1999;
+        }
+
+        .setting-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .setting-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .setting-select, .setting-range {
+            width: 100%;
+            padding: 0.5rem;
+            background: var(--primary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            color: var(--text-primary);
+        }
+
+        .close-settings {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .search-container {
+                margin: 0;
+                max-width: none;
+            }
+
+            .main-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .article {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(100, 255, 218, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(100, 255, 218, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(100, 255, 218, 0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated starfield background -->
+    <div class="starfield" id="starfield"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Cosmic Encyclopedia</div>
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search the cosmos..." id="searchInput">
+                <div class="search-results" id="searchResults"></div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn active" onclick="showSection('home')">Home</button>
+                <button class="nav-btn" onclick="showSection('articles')">Articles</button>
+                <button class="nav-btn" onclick="openSettings()">Settings</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main container -->
+    <div class="main-container">
+        <!-- Sidebar with table of contents -->
+        <aside class="sidebar">
+            <h3>📚 Table of Contents</h3>
+            
+            <div class="toc-category">
+                <h4 style="color: var(--accent-purple); margin-bottom: 0.5rem;">Solar System</h4>
+                <div class="toc-item" onclick="loadArticle('sun')">☀️ The Sun</div>
+                <div class="toc-item" onclick="loadArticle('earth')">🌍 Earth</div>
+                <div class="toc-item" onclick="loadArticle('mars')">🔴 Mars</div>
+                <div class="toc-item" onclick="loadArticle('jupiter')">🪐 Jupiter</div>
+            </div>
+
+            <div class="toc-category">
+                <h4 style="color: var(--accent-blue); margin-bottom: 0.5rem;">Deep Space</h4>
+                <div class="toc-item" onclick="loadArticle('blackholes')">🕳️ Black Holes</div>
+                <div class="toc-item" onclick="loadArticle('galaxies')">🌌 Galaxies</div>
+                <div class="toc-item" onclick="loadArticle('nebulae')">☁️ Nebulae</div>
+                <div class="toc-item" onclick="loadArticle('quasars')">💫 Quasars</div>
+            </div>
+
+            <div class="toc-category">
+                <h4 style="color: var(--accent-color); margin-bottom: 0.5rem;">Cosmology</h4>
+                <div class="toc-item" onclick="loadArticle('bigbang')">💥 Big Bang Theory</div>
+                <div class="toc-item" onclick="loadArticle('darkmatter')">🌑 Dark Matter</div>
+                <div class="toc-item" onclick="loadArticle('expansion')">📈 Cosmic Expansion</div>
+            </div>
+        </aside>
+
+        <!-- Main content area -->
+        <main class="content" id="mainContent">
+            <div class="article fade-in">
+                <h1>Welcome to the Cosmic Encyclopedia</h1>
+                <p>Explore the vast mysteries of our universe with our comprehensive collection of astronomical knowledge. From the planets in our solar system to the deepest reaches of space, discover the wonders that surround us.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">13.8B</span>
+                        <span class="stat-label">Years Old (Universe)</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">2T</span>
+                        <span class="stat-label">Galaxies (Observable)</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">100B</span>
+                        <span class="stat-label">Stars (Milky Way)</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">8</span>
+                        <span class="stat-label">Planets (Solar System)</span>
+                    </div>
+                </div>
+
+                <h2>Featured Articles</h2>
+                <p>Start your cosmic journey with these fascinating topics:</p>
+                <ul>
+                    <li><strong>Black Holes</strong> - Mysterious regions where space and time become infinitely curved</li>
+                    <li><strong>The Big Bang</strong> - The cosmic event that created our universe</li>
+                    <li><strong>Dark Matter</strong> - The invisible substance that shapes cosmic structure</li>
+                    <li><strong>Exoplanets</strong> - Worlds beyond our solar system</li>
+                </ul>
+
+                <h2>How to Navigate</h2>
+                <p>Use the table of contents on the left to browse articles by category, or use the search function in the header to find specific topics. Each article contains detailed information, images, and related links to enhance your understanding of the cosmos.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Settings panel -->
+    <div class="settings-overlay" id="settingsOverlay" onclick="closeSettings()"></div>
+    <div class="settings-panel" id="settingsPanel">
+        <button class="close-settings" onclick="closeSettings()">×</button>
+        <h3 style="color: var(--accent-color); margin-bottom: 1.5rem;">Settings</h3>
+        
+        <div class="setting-group">
+            <label class="setting-label">Theme</label>
+            <select class="setting-select" id="themeSelect">
+                <option value="dark">Dark Space</option>
+                <option value="blue">Deep Blue</option>
+                <option value="purple">Cosmic Purple</option>
+            </select>
+        </div>
+
+        <div class="setting-group">
+            <label class="setting-label">Font Size</label>
+            <input type="range" class="setting-range" id="fontSizeRange" min="12" max="20" value="16">
+            <span id="fontSizeValue">16px</span>
+        </div>
+
+        <div class="setting-group">
+            <label class="setting-label">Animation Speed</label>
+            <select class="setting-select" id="animationSpeed">
+                <option value="slow">Slow</option>
+                <option value="normal">Normal</option>
+                <option value="fast">Fast</option>
+            </select>
+        </div>
+    </div>
+
+    <script>
+        // Article database
+        const articles = {
+            sun: {
+                title: "Sun",
+                content: `
+                    <h2>Overview</h2>
+                    <p>The Sun is the star at the centre of the Solar System. It is a massive, nearly perfect sphere of hot plasma, heated to incandescence by nuclear fusion reactions in its core, radiating the energy from its surface mainly as visible light and infrared radiation with 10% at ultraviolet energies. It is by far the most important source of energy for life on Earth. The Sun has been an object of veneration in many cultures. It has been a central subject for astronomical research since antiquity. The Sun orbits the Galactic Center at a distance of 24,000 to 28,000 light-years. Its distance from Earth defines the astronomical unit, which is about 1.496×108 kilometres or about 8 light-minutes. Its diameter is about 1,391,400 km (864,600 mi), 109 times that of Earth. The Sun's mass is about 330,000 times that of Earth, making up about 99.86% of the total mass of the Solar System. Roughly three-quarters of the Sun's mass consists of hydrogen (~73%); the rest is mostly helium (~25%), with much smaller quantities of heavier elements, including oxygen, carbon, neon, and iron. The Sun is a G-type main-sequence star (G2V), informally called a yellow dwarf, though its light is actually white. It formed approximately 4.6 billion years ago from the gravitational collapse of matter within a region of a large molecular cloud. Most of this matter gathered in the centre; the rest flattened into an orbiting disk that became the Solar System. The central mass became so hot and dense that it eventually initiated nuclear fusion in its core. Every second, the Sun's core fuses about 600 billion kilograms (kg) of hydrogen into helium and converts 4 billion kg of matter into energy. About 4 to 7 billion years from now, when hydrogen fusion in the Sun's core diminishes to the point where the Sun is no longer in hydrostatic equilibrium, its core will undergo a marked increase in density and temperature which will cause its outer layers to expand, eventually transforming the Sun into a red giant. After the red giant phase, models suggest the Sun will shed its outer layers and become a dense type of cooling star (a white dwarf), and no longer produce energy by fusion, but will still glow and give off heat from its previous fusion for perhaps trillions of years. After that, it is theorised to become a super dense black dwarf, giving off negligible energy.</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">4.6B</span>
+                            <span class="stat-label">Years Old</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">5,778K</span>
+                            <span class="stat-label">Surface Temperature</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">696,340</span>
+                            <span class="stat-label">Radius (km)</span>
+                        </div>
+                    </div>
+
+                    <h2>Structure</h2>
+                    <p>The Sun consists of several layers:</p>
+                    <ul>
+                        <li><strong>Core:</strong> Where nuclear fusion occurs, temperatures reach 15 million°C</li>
+                        <li><strong>Radiative Zone:</strong> Energy slowly travels outward through radiation</li>
+                        <li><strong>Convective Zone:</strong> Hot plasma rises and cool plasma sinks</li>
+                        <li><strong>Photosphere:</strong> The visible surface we see</li>
+                        <li><strong>Corona:</strong> The Sun's outer atmosphere, visible during eclipses</li>
+                    </ul>
+
+                    <h2>Solar Activity</h2>
+                    <p>The Sun exhibits an 11-year cycle of activity, including sunspots, solar flares, and coronal mass ejections. These phenomena can affect Earth's magnetic field and create beautiful auroras.</p>
+                `
+            },
+            earth: {
+                title: "Earth",
+                content: `
+                    <h2>The Blue Planet</h2>
+                    <p>Earth is the third planet from the Sun and the only astronomical object known to harbor life. This is enabled by Earth being an ocean world, the only one in the Solar System sustaining liquid surface water. Almost all of Earth's water is contained in its global ocean, covering 70.8% of Earth's crust. The remaining 29.2% of Earth's crust is land, most of which is located in the form of continental landmasses within Earth's land hemisphere. Most of Earth's land is at least somewhat humid and covered by vegetation, while large sheets of ice at Earth's polar deserts retain more water than Earth's groundwater, lakes, rivers, and atmospheric water combined. Earth's crust consists of slowly moving tectonic plates, which interact to produce mountain ranges, volcanoes, and earthquakes. Earth has a liquid outer core that generates a magnetosphere capable of deflecting most of the destructive solar winds and cosmic radiation. Earth has a dynamic atmosphere, which sustains Earth's surface conditions and protects it from most meteoroids and UV-light at entry. It has a composition of primarily nitrogen and oxygen. Water vapor is widely present in the atmosphere, forming clouds that cover most of the planet. The water vapor acts as a greenhouse gas and, together with other greenhouse gases in the atmosphere, particularly carbon dioxide (CO2), creates the conditions for both liquid surface water and water vapor to persist via the capturing of energy from the Sun's light. This process maintains the current average surface temperature of 14.76 °C (58.57 °F), at which water is liquid under normal atmospheric pressure. Differences in the amount of captured energy between geographic regions (as with the equatorial region receiving more sunlight than the polar regions) drive atmospheric and ocean currents, producing a global climate system with different climate regions, and a range of weather phenomena such as precipitation, allowing components such as nitrogen to cycle. Earth is rounded into an ellipsoid with a circumference of about 40,000 kilometres (25,000 miles). It is the densest planet in the Solar System. Of the four rocky planets, it is the largest and most massive. Earth is about eight light-minutes (1 AU) away from the Sun and orbits it, taking a year (about 365.25 days) to complete one revolution. Earth rotates around its own axis in slightly less than a day (in about 23 hours and 56 minutes). Earth's axis of rotation is tilted with respect to the perpendicular to its orbital plane around the Sun, producing seasons. Earth is orbited by one permanent natural satellite, the Moon, which orbits Earth at 384,400 km (238,900 mi)—1.28 light seconds—and is roughly a quarter as wide as Earth. The Moon's gravity helps stabilize Earth's axis, causes tides and gradually slows Earth's rotation. Likewise Earth's gravitational pull has already made the Moon's rotation tidally locked, keeping the same near side facing Earth. Earth, like most other bodies in the Solar System, formed about 4.5 billion years ago from gas and dust in the early Solar System. During the first billion years of Earth's history, the ocean formed and then life developed within it. Life spread globally and has been altering Earth's atmosphere and surface, leading to the Great Oxidation Event two billion years ago. Humans emerged 300,000 years ago in Africa and have spread across every continent on Earth. Humans depend on Earth's biosphere and natural resources for their survival, but have increasingly impacted the planet's environment. Humanity's current impact on Earth's climate and biosphere is unsustainable, threatening the livelihood of humans and many other forms of life, and causing mass extinctions.</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">4.54B</span>
+                            <span class="stat-label">Years Old</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">12,742</span>
+                            <span class="stat-label">Diameter (km)</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">1</span>
+                            <span class="stat-label">Natural Satellite</span>
+                        </div>
+                    </div>
+
+                    <h2>Unique Features</h2>
+                    <p>Earth is unique in our solar system for several reasons:</p>
+                    <ul>
+                        <li><strong>Liquid Water:</strong> Essential for life as we know it</li>
+                        <li><strong>Protective Atmosphere:</strong> Shields us from harmful radiation</li>
+                        <li><strong>Magnetic Field:</strong> Deflects solar wind and cosmic rays</li>
+                        <li><strong>Plate Tectonics:</strong> Recycles carbon and regulates temperature</li>
+                    </ul>
+
+                    <h2>Life on Earth</h2>
+                    <p>Earth hosts an estimated 8.7 million species of life, from microscopic bacteria to massive whales. Life has existed on Earth for approximately 3.5 billion years, evolving from simple single-celled organisms to the complex ecosystems we see today.</p>
+                `
+            },
+            blackholes: {
+                title: "Black Holes - Cosmic Mysteries",
+                content: `
+                    <h2>What Are Black Holes?</h2>
+                    <p>Black holes are regions of spacetime where gravity is so strong that nothing, not even light, can escape once it crosses the event horizon. They form when massive stars collapse at the end of their lives.</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">∞</span>
+                            <span class="stat-label">Density at Center</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">299,792,458</span>
+                            <span class="stat-label">Escape Velocity (m/s)</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">4M☉</span>
+                            <span class="stat-label">Minimum Mass</span>
+                        </div>
+                    </div>
+
+                    <h2>Types of Black Holes</h2>
+                    <ul>
+                        <li><strong>Stellar Black Holes:</strong> Formed from collapsed stars, 3-20 solar masses</li>
+                        <li><strong>Intermediate Black Holes:</strong> 100-100,000 solar masses</li>
+                        <li><strong>Supermassive Black Holes:</strong> Millions to billions of solar masses, found at galaxy centers</li>
+                        <li><strong>Primordial Black Holes:</strong> Theoretical, formed in the early universe</li>
+                    </ul>
+
+                    <h2>Event Horizon</h2>
+                    <p>The event horizon is the boundary around a black hole beyond which no information or matter can escape. Its size depends on the black hole's mass - more massive black holes have larger event horizons.</p>
+
+                    <h2>Hawking Radiation</h2>
+                    <p>Stephen Hawking theorized that black holes emit radiation due to quantum effects near the event horizon. This means black holes slowly evaporate over time, with smaller ones evaporating faster than larger ones.</p>
+                `
+            },
+            bigbang: {
+                title: "The Big Bang Theory",
+                content: `
+                    <h2>The Beginning of Everything</h2>
+                    <p>The Big Bang theory describes how the universe expanded from an extremely dense and hot initial state about 13.8 billion years ago. It's the prevailing cosmological model explaining the origin and evolution of our universe.</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">13.8B</span>
+                            <span class="stat-label">Years Ago</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">10³²K</span>
+                            <span class="stat-label">Initial Temperature</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">∞</span>
+                            <span class="stat-label">Initial Density</span>
+                        </div>
+                    </div>
+
+                    <h2>Timeline of the Universe</h2>
+                    <ul>
+                        <li><strong>Planck Era (0 to 10⁻⁴³ seconds):</strong> Physics as we know it breaks down</li>
+                        <li><strong>Inflation (10⁻³⁶ to 10⁻³² seconds):</strong> Rapid exponential expansion</li>
+                        <li><strong>Nucleosynthesis (3-20 minutes):</strong> Formation of first atomic nuclei</li>
+                        <li><strong>Recombination (380,000 years):</strong> First atoms form, universe becomes transparent</li>
+                        <li><strong>First Stars (100-200 million years):</strong> Universe's first light sources</li>
+                    </ul>
+
+                    <h2>Evidence for the Big Bang</h2>
+                    <p>Several key pieces of evidence support the Big Bang theory:</p>
+                    <ul>
+                        <li><strong>Cosmic Microwave Background:</strong> Leftover radiation from the early universe</li>
+                        <li><strong>Hubble's Law:</strong> Distant galaxies are moving away from us</li>
+                        <li><strong>Nucleosynthesis:</strong> Observed ratios of light elements match predictions</li>
+                        <li><strong>Galaxy Formation:</strong> Structure formation matches computer simulations</li>
+                    </ul>
+                `
+            },
+            darkmatter: {
+                title: "Dark Matter - The Invisible Universe",
+                content: `
+                    <h2>The Hidden Majority</h2>
+                    <p>Dark matter is a form of matter that makes up approximately 27% of the universe's mass-energy content. Despite its abundance, it doesn't emit, absorb, or reflect light, making it invisible to electromagnetic radiation.</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">27%</span>
+                            <span class="stat-label">Of Universe</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">5:1</span>
+                            <span class="stat-label">Dark to Normal Matter</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Direct Detections</span>
+                        </div>
+                    </div>
+
+                    <h2>Evidence for Dark Matter</h2>
+                    <ul>
+                        <li><strong>Galaxy Rotation Curves:</strong> Stars orbit too fast for visible matter alone</li>
+                        <li><strong>Gravitational Lensing:</strong> Light bends around invisible mass</li>
+                        <li><strong>Cosmic Microwave Background:</strong> Patterns require dark matter</li>
+                        <li><strong>Galaxy Collisions:</strong> Visible and dark matter separate during collisions</li>
+                    </ul>
+
+                    <h2>Candidates for Dark Matter</h2>
+                    <p>Scientists have proposed several candidates for what dark matter might be:</p>
+                    <ul>
+                        <li><strong>WIMPs:</strong> Weakly Interacting Massive Particles</li>
+                        <li><strong>Axions:</strong> Theoretical ultra-light particles</li>
+                        <li><strong>Sterile Neutrinos:</strong> Heavy, non-interacting neutrinos</li>
+                        <li><strong>Primordial Black Holes:</strong> Ancient black holes from the early universe</li>
+                    </ul>
+
+                    <h2>The Search Continues</h2>
+                    <p>Despite decades of searching, dark matter remains elusive. Scientists use underground detectors, particle accelerators, and space telescopes to hunt for signs of dark matter interactions.</p>
+                `
+            }
+        };
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            createStarfield();
+            initializeSearch();
+            initializeSettings();
+        });
+
+        // Create animated starfield
+        function createStarfield() {
+            const starfield = document.getElementById('starfield');
+            const numStars = 100;
+
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                starfield.appendChild(star);
+            }
+        }
+
+        // Search functionality
+        function initializeSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase().trim();
+                
+                if (query.length < 2) {
+                    searchResults.style.display = 'none';
+                    return;
+                }
+
+                const results = searchArticles(query);
+                displaySearchResults(results);
+            });
+
+            // Hide search results when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.search-container')) {
+                    searchResults.style.display = 'none';
+                }
+            });
+        }
+
+        function searchArticles(query) {
+            const results = [];
+            
+            // Search through article titles and content
+            for (const [key, article] of Object.entries(articles)) {
+                const title = article.title.toLowerCase();
+                const content = article.content.toLowerCase();
+                
+                if (title.includes(query) || content.includes(query)) {
+                    results.push({
+                        key: key,
+                        title: article.title,
+                        relevance: title.includes(query) ? 2 : 1
+                    });
+                }
+            }
+
+            // Sort by relevance
+            results.sort((a, b) => b.relevance - a.relevance);
+            return results.slice(0, 5); // Limit to 5 results
+        }
+
+        function displaySearchResults(results) {
+            const searchResults = document.getElementById('searchResults');
+            
+            if (results.length === 0) {
+                searchResults.innerHTML = '<div class="search-result-item">No results found</div>';
+            } else {
+                searchResults.innerHTML = results.map(result => 
+                    `<div class="search-result-item" onclick="loadArticle('${result.key}')">${result.title}</div>`
+                ).join('');
+            }
+            
+            searchResults.style.display = 'block';
+        }
+
+        // Navigation functions
+        function showSection(section) {
+            // Update active nav button
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const mainContent = document.getElementById('mainContent');
+            
+            if (section === 'home') {
+                mainContent.innerHTML = `
+                    <div class="article fade-in">
+                        <h1>Welcome to the Cosmic Encyclopedia</h1>
+                        <p>Explore the vast mysteries of our universe with our comprehensive collection of astronomical knowledge. From the planets in our solar system to the deepest reaches of space, discover the wonders that surround us.</p>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <span class="stat-number">13.8B</span>
+                                <span class="stat-label">Years Old (Universe)</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-number">2T</span>
+                                <span class="stat-label">Galaxies (Observable)</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-number">100B</span>
+                                <span class="stat-label">Stars (Milky Way)</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-number">8</span>
+                                <span class="stat-label">Planets (Solar System)</span>
+                            </div>
+                        </div>
+
+                        <h2>Featured Articles</h2>
+                        <p>Start your cosmic journey with these fascinating topics:</p>
+                        <ul>
+                            <li><strong>Black Holes</strong> - Mysterious regions where space and time become infinitely curved</li>
+                            <li><strong>The Big Bang</strong> - The cosmic event that created our universe</li>
+                            <li><strong>Dark Matter</strong> - The invisible substance that shapes cosmic structure</li>
+                            <li><strong>The Sun</strong> - Our life-giving star</li>
+                        </ul>
+
+                        <h2>How to Navigate</h2>
+                        <p>Use the table of contents on the left to browse articles by category, or use the search function in the header to find specific topics. Each article contains detailed information, statistics, and related links to enhance your understanding of the cosmos.</p>
+                    </div>
+                `;
+            } else if (section === 'articles') {
+                const articleList = Object.entries(articles).map(([key, article]) => 
+                    `<div class="toc-item" onclick="loadArticle('${key}')" style="margin-bottom: 1rem; padding: 1rem; background: var(--accent-bg); border-radius: 8px;">
+                        <strong>${article.title}</strong>
+                    </div>`
+                ).join('');
+                
+                mainContent.innerHTML = `
+                    <div class="article fade-in">
+                        <h1>All Articles</h1>
+                        <p>Browse our complete collection of cosmic knowledge:</p>
+                        <div style="margin-top: 2rem;">
+                            ${articleList}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function loadArticle(articleKey) {
+            const article = articles[articleKey];
+            if (!article) return;
+
+            const mainContent = document.getElementById('mainContent');
+            mainContent.innerHTML = `
+                <div class="article fade-in">
+                    <h1>${article.title}</h1>
+                    ${article.content}
+                    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+                        <button class="nav-btn" onclick="showSection('home')" style="margin-right: 1rem;">← Back to Home</button>
+                        <button class="nav-btn" onclick="showSection('articles')">Browse All Articles</button>
+                    </div>
+                </div>
+            `;
+
+            // Hide search results
+            document.getElementById('searchResults').style.display = 'none';
+            document.getElementById('searchInput').value = '';
+        }
+
+        // Settings functionality
+        function initializeSettings() {
+            const fontSizeRange = document.getElementById('fontSizeRange');
+            const fontSizeValue = document.getElementById('fontSizeValue');
+            const themeSelect = document.getElementById('themeSelect');
+            const animationSpeed = document.getElementById('animationSpeed');
+
+            // Font size adjustment
+            fontSizeRange.addEventListener('input', function() {
+                const size = this.value + 'px';
+                document.body.style.fontSize = size;
+                fontSizeValue.textContent = size;
+            });
+
+            // Theme changes
+            themeSelect.addEventListener('change', function() {
+                changeTheme(this.value);
+            });
+
+            // Animation speed
+            animationSpeed.addEventListener('change', function() {
+                changeAnimationSpeed(this.value);
+            });
+        }
+
+        function openSettings() {
+            document.getElementById('settingsOverlay').style.display = 'block';
+            document.getElementById('settingsPanel').style.display = 'block';
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsOverlay').style.display = 'none';
+            document.getElementById('settingsPanel').style.display = 'none';
+        }
+
+        function changeTheme(theme) {
+            const root = document.documentElement;
+            
+            if (theme === 'blue') {
+                root.style.setProperty('--primary-bg', '#0a0f1a');
+                root.style.setProperty('--secondary-bg', '#1a2332');
+                root.style.setProperty('--accent-color', '#4fc3f7');
+                root.style.setProperty('--accent-purple', '#7986cb');
+            } else if (theme === 'purple') {
+                root.style.setProperty('--primary-bg', '#1a0a1a');
+                root.style.setProperty('--secondary-bg', '#2a1a2a');
+                root.style.setProperty('--accent-color', '#bb86fc');
+                root.style.setProperty('--accent-purple', '#cf6679');
+            } else {
+                // Default dark theme
+                root.style.setProperty('--primary-bg', '#0a0a0f');
+                root.style.setProperty('--secondary-bg', '#1a1a2e');
+                root.style.setProperty('--accent-color', '#64ffda');
+                root.style.setProperty('--accent-purple', '#bb86fc');
+            }
+        }
+
+        function changeAnimationSpeed(speed) {
+            const multiplier = speed === 'slow' ? 2 : speed === 'fast' ? 0.5 : 1;
+            const stars = document.querySelectorAll('.star');
+            
+            stars.forEach(star => {
+                const currentDuration = parseFloat(star.style.animationDuration) || 3;
+                star.style.animationDuration = (currentDuration * multiplier) + 's';
+            });
+        }
+
+        // Add some interactive effects
+        document.addEventListener('mousemove', function(e) {
+            const stars = document.querySelectorAll('.star');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            stars.forEach((star, index) => {
+                if (index % 10 === 0) { // Only affect every 10th star for performance
+                    const offsetX = (mouseX - 0.5) * 20;
+                    const offsetY = (mouseY - 0.5) * 20;
+                    star.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+                }
+            });
+        });
+
+        // Add more articles to the database
+        Object.assign(articles, {
+            mars: {
+                title: "Mars",
+                content: `
+                    <h2>The Fourth Planet</h2>
+                    <p>Mars is the fourth planet from the Sun. It is also known as the "Red Planet", because of its orange-red appearance. Mars is a desert-like rocky planet with a tenuous carbon dioxide (CO2) atmosphere. At the average surface level the atmospheric pressure is a few thousandths of Earth's, atmospheric temperature ranges from −153 to 20 °C (−243 to 68 °F) and cosmic radiation is high. Mars retains some water, in the ground as well as thinly in the atmosphere, forming cirrus clouds, frost, larger polar regions of permafrost and ice caps (with seasonal CO2 snow), but no liquid surface water. Its surface gravity is roughly a third of Earth's or double that of the Moon. It is half as wide as Earth or twice the Moon, with a diameter of 6,779 km (4,212 mi), and has a surface area the size of all the dry land of Earth. Fine dust is prevalent across the surface and the atmosphere, being picked up and spread at the low Martian gravity even by the weak wind of the tenuous atmosphere. The terrain of Mars roughly follows a north-south divide, the Martian dichotomy, with the northern hemisphere mainly consisting of relatively flat, low lying plains, and the southern hemisphere of cratered highlands. Geologically, the planet is fairly active with marsquakes trembling underneath the ground, but also hosts many enormous extinct volcanoes (the tallest is Olympus Mons, 21.9 km or 13.6 mi tall) and one of the largest canyons in the Solar System (Valles Marineris, 4,000 km or 2,500 mi long). Mars has two natural satellites that are small and irregular in shape: Phobos and Deimos. With a significant axial tilt of 25 degrees Mars experiences seasons, like Earth (which has an axial tilt of 23.5 degrees). A Martian solar year is equal to 1.88 Earth years (687 Earth days), a Martian solar day (sol) is equal to 24.6 hours. Mars was formed approximately 4.5 billion years ago. During the Noachian period (4.5 to 3.5 billion years ago), its surface was marked by meteor impacts, valley formation, erosion, the possible presence of water oceans and the loss of its magnetosphere. The Hesperian period (beginning 3.5 billion years ago and ending 3.3–2.9 billion years ago) was dominated by widespread volcanic activity and flooding that carved immense outflow channels. The Amazonian period, which continues to the present is the currently dominating and remaining influence on geological processes. Due to Mars's geological history, the possibility of past or present life on Mars remains an area of active scientific investigation. Being particularly visible in Earth's sky as a red wandering star, Mars has been observed throughout history, acquiring diverse associations in different cultures. In 1963 the first flight to Mars took place with Mars 1, but communication was lost en route. The first successful flyby exploration of Mars was conducted in 1965 with Mariner 4. In 1971 Mariner 9 entered orbit around Mars, being the first spacecraft to orbit any body other than the Moon, Sun or Earth; following in the same year were the first uncontrolled impact (Mars 2) and first landing (Mars 3) on Mars. Probes have been active on Mars continuously since 1997; at times, more than ten probes have simultaneously operated in orbit or on the surface. Mars is an often proposed target for future human exploration missions, though no such mission is planned yet.</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">687</span>
+                            <span class="stat-label">Earth Days (1 Year)</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">-80°C</span>
+                            <span class="stat-label">Average Temperature</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">2</span>
+                            <span class="stat-label">Moons</span>
+                        </div>
+                    </div>
+
+                    <h2>Geological Features</h2>
+                    <ul>
+                        <li><strong>Olympus Mons:</strong> The largest volcano in the solar system</li>
+                        <li><strong>Valles Marineris:</strong> A vast canyon system</li>
+                        <li><strong>Polar Ice Caps:</strong> Made of water and frozen carbon dioxide</li>
+                        <li><strong>Impact Craters:</strong> Evidence of ancient bombardment</li>
+                    </ul>
+
+                    <h2>Exploration</h2>
+                    <p>Mars has been explored by numerous spacecraft, including rovers like Curiosity and Perseverance. These missions search for signs of past or present life and study the planet's climate and geology.</p>
+                `
+            },
+            jupiter: {
+                title: "Jupiter - The Gas Giant",
+                content: `
+                    <h2>King of the Planets</h2>
+                    <p>Jupiter is the largest planet in our Solar System and the fifth from the Sun. This gas giant has a mass greater than all other planets combined and plays a crucial role in protecting the inner planets from asteroids and comets.</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">79</span>
+                            <span class="stat-label">Known Moons</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">-145°C</span>
+                            <span class="stat-label">Cloud Top Temperature</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">11.8</span>
+                            <span class="stat-label">Earth Years (1 Orbit)</span>
+                        </div>
+                    </div>
+
+                    <h2>The Great Red Spot</h2>
+                    <p>Jupiter's most famous feature is the Great Red Spot, a giant storm that has been raging for at least 400 years. This anticyclonic storm is larger than Earth and has winds reaching speeds of up to 432 km/h.</p>
+
+                    <h2>Major Moons</h2>
+                    <ul>
+                        <li><strong>Io:</strong> The most volcanically active body in the solar system</li>
+                        <li><strong>Europa:</strong> May harbor a subsurface ocean beneath its icy crust</li>
+                        <li><strong>Ganymede:</strong> The largest moon in the solar system</li>
+                        <li><strong>Callisto:</strong> Heavily cratered and ancient surface</li>
+                    </ul>
+                `
+            },
+            galaxies: {
+                title: "Galaxies - Island Universes",
+                content: `
+                    <h2>Cosmic Cities of Stars</h2>
+                    <p>Galaxies are vast collections of stars, gas, dust, and dark matter bound together by gravity. They are the fundamental building blocks of the universe, containing billions to trillions of stars.</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">2T</span>
+                            <span class="stat-label">Estimated Galaxies</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">100B</span>
+                            <span class="stat-label">Stars (Milky Way)</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">100,000</span>
+                            <span class="stat-label">Light Years (MW Diameter)</span>
+                        </div>
+                    </div>
+
+                    <h2>Types of Galaxies</h2>
+                    <ul>
+                        <li><strong>Spiral Galaxies:</strong> Like our Milky Way, with curved arms of stars</li>
+                        <li><strong>Elliptical Galaxies:</strong> Smooth, oval-shaped with older stars</li>
+                        <li><strong>Irregular Galaxies:</strong> No defined shape, often result of collisions</li>
+                        <li><strong>Dwarf Galaxies:</strong> Small galaxies with fewer than 1 billion stars</li>
+                    </ul>
+
+                    <h2>Galaxy Formation</h2>
+                    <p>Galaxies formed from gravitational collapse of dark matter halos in the early universe. Over billions of years, they grew through mergers and accretion of gas and smaller galaxies.</p>
+                `
+            },
+            nebulae: {
+                title: "Nebulae - Stellar Nurseries",
+                content: `
+                    <h2>Clouds of Cosmic Dust</h2>
+                    <p>Nebulae are vast clouds of gas and dust in space. These beautiful cosmic structures serve as stellar nurseries where new stars are born, and as the final resting places of dying stars.</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">70%</span>
+                            <span class="stat-label">Hydrogen Content</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">-260°C</span>
+                            <span class="stat-label">Typical Temperature</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">1000s</span>
+                            <span class="stat-label">Light Years Across</span>
+                        </div>
+                    </div>
+
+                    <h2>Types of Nebulae</h2>
+                    <ul>
+                        <li><strong>Emission Nebulae:</strong> Glow from ionized gas heated by nearby stars</li>
+                        <li><strong>Reflection Nebulae:</strong> Reflect light from nearby stars</li>
+                        <li><strong>Dark Nebulae:</strong> Dense clouds that block background light</li>
+                        <li><strong>Planetary Nebulae:</strong> Shells of gas expelled by dying stars</li>
+                        <li><strong>Supernova Remnants:</strong> Expanding shells from stellar explosions</li>
+                    </ul>
+
+                    <h2>Star Formation</h2>
+                    <p>Within dense regions of nebulae, gravity causes gas and dust to collapse, eventually becoming hot and dense enough to ignite nuclear fusion, creating new stars.</p>
+                `
+            },
+            quasars: {
+                title: "Quasars - Cosmic Lighthouses",
+                content: `
+                    <h2>The Most Luminous Objects</h2>
+                    <p>Quasars are extremely luminous active galactic nuclei powered by supermassive black holes. They are among the most distant and energetic objects in the observable universe.</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">1000x</span>
+                            <span class="stat-label">Brighter than Galaxies</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">13B</span>
+                            <span class="stat-label">Light Years Away</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">10⁴⁰W</span>
+                            <span class="stat-label">Typical Power Output</span>
+                        </div>
+                    </div>
+
+                    <h2>How Quasars Work</h2>
+                    <p>Quasars are powered by matter falling into supermassive black holes at galaxy centers. As matter spirals inward, it heats up and emits enormous amounts of energy across the electromagnetic spectrum.</p>
+
+                    <h2>Significance</h2>
+                    <ul>
+                        <li><strong>Cosmic Distance Markers:</strong> Help measure universe expansion</li>
+                        <li><strong>Early Universe:</strong> Show us galaxies as they were billions of years ago</li>
+                        <li><strong>Black Hole Growth:</strong> Reveal how supermassive black holes formed</li>
+                        <li><strong>Intergalactic Medium:</strong> Illuminate gas between galaxies</li>
+                    </ul>
+                `
+            },
+            expansion: {
+                title: "Cosmic Expansion - The Growing Universe",
+                content: `
+                    <h2>The Universe is Expanding</h2>
+                    <p>One of the most profound discoveries in cosmology is that the universe is expanding. Every galaxy is moving away from every other galaxy, and the farther apart they are, the faster they're separating.</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">70</span>
+                            <span class="stat-label">km/s per Mpc (Hubble Constant)</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">13.8B</span>
+                            <span class="stat-label">Years Since Big Bang</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">68%</span>
+                            <span class="stat-label">Dark Energy Content</span>
+                        </div>
+                    </div>
+
+                    <h2>Hubble's Discovery</h2>
+                    <p>Edwin Hubble discovered in 1929 that distant galaxies are receding from us, with more distant galaxies moving away faster. This relationship, known as Hubble's Law, provided the first evidence for an expanding universe.</p>
+
+                    <h2>Dark Energy</h2>
+                    <p>Not only is the universe expanding, but this expansion is accelerating due to a mysterious force called dark energy. Dark energy makes up about 68% of the universe and its nature remains one of the biggest mysteries in physics.</p>
+
+                    <h2>Future of Expansion</h2>
+                    <ul>
+                        <li><strong>Big Freeze:</strong> Universe continues expanding and cooling forever</li>
+                        <li><strong>Heat Death:</strong> All energy becomes evenly distributed</li>
+                        <li><strong>Big Rip:</strong> Expansion accelerates until atoms are torn apart</li>
+                    </ul>
+                `
+            }
+        });
+    </script>
+</body>
+</html>

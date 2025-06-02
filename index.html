@@ -1,1 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cosmic.</title>
+    <link href="assets/styles.css" rel="stylesheet">
+    <meta name="description" content="play the best unblocked games at cosmic. play anytime, anywhere - no restrictions.">
+    <meta name="keywords" content="WebGL powered games">
+    <meta name="author" content="c6smic">
+    
+    <!-- Game Controller Favicon -->
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwMDAwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTcgNkMzLjY5IDYgMSA4LjY5IDEgMTJTMy42OSAxOCA3IDE4SDE3QzIwLjMxIDE4IDIzIDE1LjMxIDIzIDEyUzIwLjMxIDYgMTcgNkg3Wk03IDhIMTdDMTkuMjEgOCAyMSA5Ljc5IDIxIDEyUzE5LjIxIDE2IDE3IDE2SDdDNC43OSAxNiAzIDE0LjIxIDMgMTJTNC43OSA4IDcgOFpNOSAxMEM4LjQ1IDEwIDggMTAuNDUgOCAxMVM4LjQ1IDEyIDkgMTJTMTAgMTEuNTUgMTAgMTFTOS41NSAxMCA5IDEwWk0xNSAxMEMxNC40NSAxMCAxNCAxMC40NSAxNCAxMVMxNC40NSAxMiAxNSAxMlMxNiAxMS41NSAxNiAxMVMxNS41NSAxMCAxNSAxMFpNNyAxNEM2LjQ1IDE0IDYgMTQuNDUgNiAxNVM2LjQ1IDE2IDcgMTZTOCAxNS41NSA4IDE1UzcuNTUgMTQgNyAxNFpNMTcgMTRDMTYuNDUgMTQgMTYgMTQuNDUgMTYgMTVTMTYuNDUgMTYgMTcgMTZTMTggMTUuNTUgMTggMTVTMTcuNTUgMTQgMTcgMTRaIiBmaWxsPSIjZWM0ODk5Ii8+Cjwvc3ZnPgo=" id="favicon">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Stars Background -->
+    <div class="stars-container" id="starsContainer"></div>
 
+    <!-- Discord Button -->
+    <div class="discord-button" onclick="openDiscord()">
+        <i class="ri-discord-fill"></i>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="#" class="logo" onclick="showSection('home')">
+                <i class="ri-gamepad-fill logo-icon"></i>
+                <span class="logo-text">cosmic.</span>
+            </a>
+            
+            <div class="nav-center">
+                <div class="search-container">
+                    <input 
+                        type="text" 
+                        class="search-input" 
+                        placeholder="Search games..." 
+                        id="searchInput"
+                        autocomplete="off"
+                    >
+                    <div class="search-dropdown" id="searchDropdown"></div>
+                </div>
+            </div>
+            
+            <div class="nav-links">
+                <span class="nav-link" onclick="showSection('games')">games</span>
+                <span class="nav-link" onclick="showSection('bookmarklets')">bookmarklets</span>
+                <span class="nav-link" onclick="showSection('settings')">settings</span>
+            </div>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="ri-menu-line"></i>
+            </button>
+        </div>
+        
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-search">
+                <div class="search-container">
+                    <input 
+                        type="text" 
+                        class="search-input" 
+                        placeholder="Search games..." 
+                        id="mobileSearchInput"
+                        autocomplete="off"
+                    >
+                    <div class="search-dropdown" id="mobileSearchDropdown"></div>
+                </div>
+            </div>
+            <div class="mobile-nav-links">
+                <span class="mobile-nav-link" onclick="showSection('games')">Games</span>
+                <span class="mobile-nav-link" onclick="showSection('bookmarklets')">Bookmarklets</span>
+                <span class="mobile-nav-link" onclick="showSection('settings')">Settings</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="page-section">
+        <div class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">welcome to cosmic.</h1>
+                <p class="hero-subtitle" id="typingText"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Section -->
+    <section id="games" class="page-section hidden">
+        <div class="games-layout">
+            <!-- Games Sidebar -->
+            <div class="games-sidebar">
+                <div class="sidebar-header">
+                    <h2 class="sidebar-title">
+
+                    </h2>
+                
+                    
+                    <h3 class="all-games-title">
+                        <i class="ri-grid-fill"></i>
+                        all games
+                    </h3>
+                </div>
+                
+                <div class="games-list" id="gamesList"></div>
+            </div>
+            
+            <!-- Game Player -->
+            <div class="game-player">
+                <div class="player-header">
+                    <h3 class="current-game-title" id="currentGameTitle">select a game to play</h3>
+                </div>
+                
+                <div class="game-container" id="gameContainer">
+                    <div class="no-game-selected">
+                        <i class="ri-gamepad-line"></i>
+                        <h3>choose a game from the list</h3>
+                        <p>click on any game from the sidebar to start playing</p>
+                    </div>
+                </div>
+                
+                <div class="game-controls" id="gameControls">
+                    <button class="control-btn" onclick="openGameNewTab()" id="newTabBtn" disabled>
+                        <i class="ri-external-link-line"></i>
+                        New Tab
+                    </button>
+                    <button class="control-btn" onclick="openGameAboutBlank()" id="aboutBlankBtn" disabled>
+                        <i class="ri-window-line"></i>
+                        About:Blank
+                    </button>
+                    <button class="control-btn" onclick="toggleFullscreen()" id="fullscreenBtn" disabled>
+                        <i class="ri-fullscreen-line"></i>
+                        Fullscreen
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bookmarklets Section -->
+    <section id="bookmarklets" class="page-section hidden">
+        <div class="bookmarklets-section">
+            <h2 class="section-title">cosmic bookmarklets</h2>
+            <p class="section-subtitle">
+                drag these bookmarklets to your bookmarks bar for quick access.
+            </p>
+            <div class="bookmarklets-grid" id="bookmarkletsGrid"></div>
+        </div>
+    </section>
+
+    <!-- Settings Section -->
+    <section id="settings" class="page-section hidden">
+        <div class="settings-section">
+            <h2 class="section-title">cosmic settings</h2>
+            <p class="section-subtitle">
+                customize your cosmic experience with a list of settings.
+            </p>
+            
+            <div class="settings-group">
+                <h3>theme</h3>
+                <div class="setting-item">
+                    <label class="setting-label">choose your theme:</label>
+                    <select class="setting-select" id="themeSelect">
+                        <option value="cosmic">cosmic space (default)</option>
+                        <option value="light">light mode</option>
+                        <option value="sepia">sepia vintage</option>
+                        <option value="cyberpunk">cyberpunk neon</option>
+                        <option value="mountains">mountain peaks</option>
+                        <option value="ocean">deep ocean</option>
+                        <option value="forest">enchanted forest</option>
+                        <option value="sunset">cosmic sunset</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <h3>tab disguise</h3>
+                <div class="setting-item">
+                    <label class="setting-label">change favicon and title to disguise this tab:</label>
+                    <select class="setting-select" id="disguiseSelect">
+                        <option value="default">cosmic. (default)</option>
+                        <option value="google">Google</option>
+                        <option value="drive">Google Drive</option>
+                        <option value="gmail">Gmail</option>
+                        <option value="classroom">Google Classroom</option>
+                        <option value="docs">Google Docs</option>
+                        <option value="canvas">Canvas</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <h3>quick actions</h3>
+                <div class="setting-item">
+                    <button class="setting-button" onclick="openInAboutBlank()">
+                        <i class="ri-external-link-line"></i>
+                        open in about:blank
+                    </button>
+                    <button class="setting-button" onclick="resetSettings()">
+                        <i class="ri-refresh-line"></i>
+                        reset all settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="assets/scripts.js"></script>
+</body>
+</html>

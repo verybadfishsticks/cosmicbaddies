@@ -1,0 +1,65 @@
+I LOVE MONTGOMERY COUNTY PUBLIC SCHOOLS, ESPECIALLY AEHS, NMMS, HES, AND VMES. I REALLY LOVE THE AMAZING IT TEAM OF MONTGOMERY COUNTY PUBLIC SCHOOLS
+
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cosmic.</title>
+    <link rel="icon" type="image/x-icon" href="https://cdn1.iconfinder.com/data/icons/miscellaneous-colorful/48/saturn-512.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Homepage -->
+    <div id="homepage">
+        <header>
+            <div class="container">
+                <nav>
+                    <div class="logo">🎮 cosmic.</div>
+                    <div class="search-container">
+                        <input type="text" class="search-box" id="searchInput" placeholder="🔍 Search games...">
+                        <div class="search-dropdown" id="searchDropdown"></div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+            <div class="container">
+                <section class="games-section">
+                    <div class="games-grid" id="gamesGrid">
+                        <!-- Games will be dynamically loaded here -->
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Game Player Page -->
+    <div id="gamePage" class="game-player">
+        <div class="game-header">
+            <div class="container">
+                <div class="game-nav">
+                    <div class="game-controls">
+                        <button class="back-btn" onclick="goHome()">
+                            ← Back to Games
+                        </button>
+                        <button class="fullscreen-btn" onclick="toggleFullscreen()">
+                            ⛶ Fullscreen
+                        </button>
+                    </div>
+                    <h2 id="currentGameTitle">Game Title</h2>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="game-container">
+                <iframe id="gameFrame" class="game-frame" src="" title="Game Player"></iframe>
+            </div>
+        </div>
+    </div>
+
+<script src="scripts.js"></script>
+</body>
+</html>
