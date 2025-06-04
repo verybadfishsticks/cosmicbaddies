@@ -1,14 +1,16 @@
-// games data
-fetch("https://list.classroomsarecool.mex.com")
-  .then(response => response.text()) // or response.json() if it's JSON
-  .then(data => {
-    // If it's a string that needs to be an array
-    const arrayString = JSON.stringify([data]);
-    console.log(arrayString);
-  })
-  .catch(error => {
-    console.error("Fetch error:", error);
-  });
+// Global variables
+let games = []
+let currentPhraseIndex = 0
+let currentCharIndex = 0
+let isDeleting = false
+let typingSpeed = 65
+let favorites = JSON.parse(localStorage.getItem("cosmic_favorites")) || []
+let currentGame = null
+let panicKey = localStorage.getItem("cosmic_panic_key") || "none"
+
+// Groq AI configuration
+const GROQ_API_KEY = "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"
+const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 // typing animation phrases
 const typingPhrases = [
@@ -19,38 +21,229 @@ const typingPhrases = [
   "the digital repository of gaming and entertainment.",
 ]
 
-let currentPhraseIndex = 0
-let currentCharIndex = 0
-let isDeleting = false
-let typingSpeed = 65
-
-// favorites system
-let favorites = JSON.parse(localStorage.getItem("cosmic_favorites")) || []
-
-// current game state
-let currentGame = null
-
-// panic key functionality
-let panicKey = localStorage.getItem("cosmic_panic_key") || "none"
-
-// AI chatbot responses
-const aiResponses = [
-  "I'm here to help! What would you like to know?",
-  "That's an interesting question! Let me think about that...",
-  "I can help you with games, settings, or general questions about the site.",
-  "Have you tried checking out our games section? There are tons of great options!",
-  "If you're having trouble with anything, feel free to ask me for help.",
-  "The tools section has some useful features like the web proxy.",
-  "You can customize your experience in the settings section.",
-  "Is there a specific game you're looking for? I can help you find it!",
-  "The bookmarklets section has some handy browser tools.",
-  "Feel free to explore all the different sections of the site!",
+// bookmarklets data
+const bookmarklets = [
+  {
+    title: "Unblocker",
+    description: "Bypass website restrictions and access blocked content.",
+    code: `javascript:(function(){var url=prompt('Enter URL to unblock:');if(url){window.open('https://www.croxyproxy.com/'+encodeURIComponent(url),'_blank');}})();`,
+  },
+  {
+    title: "Tab Cloak",
+    description: "Disguise your current tab as Google.",
+    code: `javascript:(function(){document.title='Google';var link=document.querySelector("link[rel*='icon']")||document.createElement('link');link.type='image/x-icon';link.rel='shortcut icon';link.href='https://www.google.com/favicon.ico';document.getElementsByTagName('head')[0].appendChild(link);})();`,
+  },
+  {
+    title: "History Flooder",
+    description: "Flood browser history to hide your tracks.",
+    code: `javascript:(function(){var sites=['https://www.google.com','https://www.youtube.com','https://www.wikipedia.org','https://www.github.com','https://www.stackoverflow.com'];for(var i=0;i<50;i++){history.pushState({},'',sites[Math.floor(Math.random()*sites.length)]);}alert('History flooded!');})();`,
+  },
+  {
+    title: "Panic Button",
+    description: "Quickly redirect to Google when you need to hide.",
+    code: `javascript:(function(){window.location.href='https://www.google.com';})();`,
+  },
+  {
+    title: "About Blank",
+    description: "Open current page in about:blank.",
+    code: `javascript:(function(){var win=window.open('about:blank','_blank');win.document.write('<iframe src="'+window.location.href+'" style="width:100%;height:100%;border:none;"></iframe>');})();`,
+  },
+  {
+    title: "Inspect Element",
+    description: "Enable inspect element on restricted sites.",
+    code: `javascript:(function(){var script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/ianramzy/decancer@main/index.js';document.head.appendChild(script);})();`,
+  },
 ]
+
+// Fetch games from external API
+async function fetchGames() {
+  try {
+    const response = await fetch("https://list.classroomsarecool.mex.com")
+    const htmlContent = await response.text()
+
+    // Parse the HTML content to extract games
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(htmlContent, "text/html")
+
+    // Find all game links with the format <a data-href="game-id"><img src="icon-url"></a>
+    const gameLinks = doc.querySelectorAll("a[data-href]")
+
+    games = Array.from(gameLinks)
+      .map((link) => {
+        const gameId = link.getAttribute("data-href")
+        const img = link.querySelector("img")
+        const imgSrc = img ? img.getAttribute("src") : ""
+
+        // Extract game title from image alt or data attributes
+        let title = img ? img.getAttribute("alt") || img.getAttribute("title") || "" : ""
+        if (!title) {
+          // Try to extract title from the game ID
+          title = gameId.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())
+        }
+
+        return {
+          id: gameId,
+          title: title,
+          icon: imgSrc.startsWith("http") ? imgSrc : `https://list.classroomsarecool.mex.com${imgSrc}`,
+          url: `https://list.classroomsarecool.mex.com/games/${gameId}/`,
+        }
+      })
+      .filter((game) => game.id && game.title) // Filter out invalid games
+
+    console.log(`Loaded ${games.length} games from API`)
+    renderGamesList()
+  } catch (error) {
+    console.error("Error fetching games:", error)
+    // Fallback to a few default games if API fails
+    games = [
+      {
+        id: "slope",
+        title: "Slope",
+        icon: "https://cyberschool-lol.w3spaces.com/img/slope.jpg",
+        url: "https://cyberschool-lol.w3spaces.com/g/slope.html",
+      },
+      {
+        id: "2048",
+        title: "2048",
+        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC8LNTs0AsLHpjdIA4lSOst9zVgCp_QpE1l4gUp7pwaiKz6VIGgDgDQnhPSVBsDqYVbf4&usqp=CAU",
+        url: "https://cyberschool-lol.w3spaces.com/g/2048.html",
+      },
+    ]
+    renderGamesList()
+  }
+}
+
+// AI chatbot functionality with Groq API
+async function sendMessageToGroq(message) {
+  try {
+    const response = await fetch(GROQ_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${GROQ_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "meta-llama/llama-4-scout-17b-16e-instruct",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a helpful AI assistant for a gaming website called 'cosmic.' You help users with games, website features, and general questions. Keep responses concise and friendly.",
+          },
+          {
+            role: "user",
+            content: message,
+          },
+        ],
+        max_tokens: 150,
+        temperature: 0.7,
+      }),
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const data = await response.json()
+    return data.choices[0].message.content
+  } catch (error) {
+    console.error("Error calling Groq API:", error)
+    // Fallback responses
+    const fallbackResponses = [
+      "I'm here to help! What would you like to know about cosmic?",
+      "Sorry, I'm having trouble connecting right now. Try asking about our games or features!",
+      "I can help you with games, settings, or general questions about the site.",
+      "Have you tried checking out our games section? There are tons of great options!",
+      "The tools section has some useful features like the web proxy.",
+    ]
+    return fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)]
+  }
+}
+
+// Enhanced AI chatbot functionality
+async function sendMessage() {
+  const chatInput = document.getElementById("chatInput")
+  const chatMessages = document.getElementById("chatMessages")
+  const message = chatInput.value.trim()
+
+  if (message) {
+    // Add user message
+    const userMessage = document.createElement("div")
+    userMessage.className = "chat-message user-message"
+    userMessage.innerHTML = `
+      <div class="message-avatar">
+        <i class="ri-user-line"></i>
+      </div>
+      <div class="message-content">${message}</div>
+    `
+    chatMessages.appendChild(userMessage)
+
+    // Clear input
+    chatInput.value = ""
+
+    // Add typing indicator
+    const typingMessage = document.createElement("div")
+    typingMessage.className = "chat-message bot-message typing-indicator"
+    typingMessage.innerHTML = `
+      <div class="message-avatar">
+        <i class="ri-robot-line"></i>
+      </div>
+      <div class="message-content">
+        <div class="typing-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    `
+    chatMessages.appendChild(typingMessage)
+    chatMessages.scrollTop = chatMessages.scrollHeight
+
+    // Get AI response
+    try {
+      const aiResponse = await sendMessageToGroq(message)
+
+      // Remove typing indicator
+      typingMessage.remove()
+
+      // Add bot response
+      const botMessage = document.createElement("div")
+      botMessage.className = "chat-message bot-message"
+      botMessage.innerHTML = `
+        <div class="message-avatar">
+          <i class="ri-robot-line"></i>
+        </div>
+        <div class="message-content">${aiResponse}</div>
+      `
+      chatMessages.appendChild(botMessage)
+      chatMessages.scrollTop = chatMessages.scrollHeight
+    } catch (error) {
+      // Remove typing indicator and show error
+      typingMessage.remove()
+      const errorMessage = document.createElement("div")
+      errorMessage.className = "chat-message bot-message"
+      errorMessage.innerHTML = `
+        <div class="message-avatar">
+          <i class="ri-robot-line"></i>
+        </div>
+        <div class="message-content">Sorry, I'm having trouble responding right now. Please try again!</div>
+      `
+      chatMessages.appendChild(errorMessage)
+      chatMessages.scrollTop = chatMessages.scrollHeight
+    }
+  }
+}
+
+function handleChatKeyPress(event) {
+  if (event.key === "Enter") {
+    sendMessage()
+  }
+}
 
 // initialize the page
 document.addEventListener("DOMContentLoaded", () => {
   createStars()
-  renderGamesList()
+  fetchGames() // Fetch games from API
   renderBookmarklets()
   setupSearch()
   setupNavbar()
@@ -173,6 +366,11 @@ function renderGamesList() {
   const gamesList = document.getElementById("gamesList")
   gamesList.innerHTML = ""
 
+  if (games.length === 0) {
+    gamesList.innerHTML = '<div class="loading-games">Loading games...</div>'
+    return
+  }
+
   games.forEach((game) => {
     const gameItem = createGameItem(game)
     gamesList.appendChild(gameItem)
@@ -245,56 +443,10 @@ function openProxy() {
   const proxyFrameContainer = document.getElementById("proxyFrameContainer")
 
   if (proxyUrl) {
-    // Use a simple proxy service (note: this is basic and may not work for all sites)
+    // Use a simple proxy service
     const proxiedUrl = `https://cors-anywhere.herokuapp.com/${proxyUrl}`
     proxyFrame.src = proxiedUrl
     proxyFrameContainer.classList.add("show")
-  }
-}
-
-// AI chatbot functionality
-function sendMessage() {
-  const chatInput = document.getElementById("chatInput")
-  const chatMessages = document.getElementById("chatMessages")
-  const message = chatInput.value.trim()
-
-  if (message) {
-    // Add user message
-    const userMessage = document.createElement("div")
-    userMessage.className = "chat-message user-message"
-    userMessage.innerHTML = `
-      <div class="message-avatar">
-        <i class="ri-user-line"></i>
-      </div>
-      <div class="message-content">${message}</div>
-    `
-    chatMessages.appendChild(userMessage)
-
-    // Clear input
-    chatInput.value = ""
-
-    // Add bot response after a delay
-    setTimeout(() => {
-      const botMessage = document.createElement("div")
-      botMessage.className = "chat-message bot-message"
-      const randomResponse = aiResponses[Math.floor(Math.random() * aiResponses.length)]
-      botMessage.innerHTML = `
-        <div class="message-avatar">
-          <i class="ri-robot-line"></i>
-        </div>
-        <div class="message-content">${randomResponse}</div>
-      `
-      chatMessages.appendChild(botMessage)
-      chatMessages.scrollTop = chatMessages.scrollHeight
-    }, 1000)
-
-    chatMessages.scrollTop = chatMessages.scrollHeight
-  }
-}
-
-function handleChatKeyPress(event) {
-  if (event.key === "Enter") {
-    sendMessage()
   }
 }
 
@@ -530,10 +682,8 @@ function changeBackground(type) {
       break
     case "particles":
       starsContainer.style.display = "block"
-      // Add particle effects (simplified)
       break
     case "none":
-      // All backgrounds hidden
       break
   }
 }
@@ -551,7 +701,6 @@ function changeAnimationSpeed(speed) {
 
 // setup panic key
 function setupPanicKey() {
-  // Remove existing event listeners
   document.removeEventListener("keydown", handlePanicKey)
 
   if (panicKey !== "none") {
@@ -622,7 +771,6 @@ function importSettings() {
         try {
           const settings = JSON.parse(e.target.result)
 
-          // Apply imported settings
           if (settings.theme) {
             localStorage.setItem("cosmic_theme", settings.theme)
             document.getElementById("themeSelect").value = settings.theme
@@ -719,7 +867,6 @@ function resetSettings() {
     setupPanicKey()
     renderGamesList()
 
-    // reset game player
     document.getElementById("currentGameTitle").textContent = "Select a game to play"
     document.getElementById("gameContainer").innerHTML = `
       <div class="no-game-selected">
