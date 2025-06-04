@@ -1,10 +1,10 @@
-// retarded games data (holy shit we need an api)
+// games data
 const games = [
   {
     id: "tombofthemask",
     title: "Tomb of The Mask",
     icon: "https://i.ibb.co/Kjr0yQ38/IMG-2306.png",
-    url: "https://cyberschool-lol.w3spaces.com/g/tombofthemask.html"
+    url: "https://cyberschool-lol.w3spaces.com/g/tombofthemask.html",
   },
   {
     id: "slope",
@@ -16,7 +16,7 @@ const games = [
     id: "pixelgenerator",
     title: "Pixel Art Generator",
     icon: "https://i.ibb.co/wkpLqQk/IMG-2305.jpg",
-    url: "https://cyberschool-lol.w3spaces.com/g/pixelgenerator.html"
+    url: "https://cyberschool-lol.w3spaces.com/g/pixelgenerator.html",
   },
   {
     id: "spacehuggers",
@@ -398,8 +398,7 @@ const games = [
   },
 ]
 
-// bookmarklets data, hold on, bookmarklets dont work, why did we add them?? 
-// because they might work for other counties - c6smic
+// bookmarklets data
 const bookmarklets = [
   {
     title: "Unblocker",
@@ -424,7 +423,7 @@ const bookmarklets = [
   {
     title: "About Blank",
     description: "Open current page in about:blank.",
-    code: `javascriptfunctionvar win=window.openabout:blank,_blank;win.document.write(<iframe src=+window.location.href+ style=width:100%;height:100%;border:none;></iframe>);`,
+    code: `javascript:(function(){var win=window.open('about:blank','_blank');win.document.write('<iframe src="'+window.location.href+'" style="width:100%;height:100%;border:none;"></iframe>');})();`,
   },
   {
     title: "Inspect Element",
@@ -433,7 +432,7 @@ const bookmarklets = [
   },
 ]
 
-// cool corporate ass sounding typing animation phrases
+// typing animation phrases
 const typingPhrases = [
   "your ultimate destination for unblocked gaming.",
   "endless entertainment at your fingertips.",
@@ -447,13 +446,30 @@ let currentCharIndex = 0
 let isDeleting = false
 let typingSpeed = 65
 
-// favorites system THAT WE DONT EVEN FUCKING USE
+// favorites system
 let favorites = JSON.parse(localStorage.getItem("cosmic_favorites")) || []
 
-// current mothafucking game state
+// current game state
 let currentGame = null
 
-// initialize the dumbass page
+// panic key functionality
+let panicKey = localStorage.getItem("cosmic_panic_key") || "none"
+
+// AI chatbot responses
+const aiResponses = [
+  "I'm here to help! What would you like to know?",
+  "That's an interesting question! Let me think about that...",
+  "I can help you with games, settings, or general questions about the site.",
+  "Have you tried checking out our games section? There are tons of great options!",
+  "If you're having trouble with anything, feel free to ask me for help.",
+  "The tools section has some useful features like the web proxy.",
+  "You can customize your experience in the settings section.",
+  "Is there a specific game you're looking for? I can help you find it!",
+  "The bookmarklets section has some handy browser tools.",
+  "Feel free to explore all the different sections of the site!",
+]
+
+// initialize the page
 document.addEventListener("DOMContentLoaded", () => {
   createStars()
   renderGamesList()
@@ -464,15 +480,16 @@ document.addEventListener("DOMContentLoaded", () => {
   setupSettings()
   loadSettings()
   startTypingAnimation()
-  renderFavorites()
+  setupPanicKey()
+  setupBackgroundEffects()
 })
 
-// discord function you fucking discord mod
+// discord function
 function openDiscord() {
   window.open("https://discord.gg/wT7u27Wbm6", "_blank")
 }
 
-// typing animations and stuff
+// typing animation
 function startTypingAnimation() {
   const typingElement = document.getElementById("typingText")
 
@@ -492,12 +509,12 @@ function startTypingAnimation() {
     typingElement.className = "hero-subtitle typing-cursor"
 
     if (!isDeleting && currentCharIndex === currentPhrase.length) {
-      typingSpeed = 2000 // Pause at end
+      typingSpeed = 2000
       isDeleting = true
     } else if (isDeleting && currentCharIndex === 0) {
       isDeleting = false
       currentPhraseIndex = (currentPhraseIndex + 1) % typingPhrases.length
-      typingSpeed = 500 // Pause before next phrase
+      typingSpeed = 500
     }
 
     setTimeout(type, typingSpeed)
@@ -539,7 +556,7 @@ function showSection(sectionName) {
   }
 }
 
-// favorites functionality [WHAT THE FUCK WE REMOVED FAVORITES WHY IS IT STILL FUCKING HERE]
+// favorites functionality
 function toggleFavorite(gameId, event) {
   event.stopPropagation()
 
@@ -552,28 +569,10 @@ function toggleFavorite(gameId, event) {
 
   localStorage.setItem("cosmic_favorites", JSON.stringify(favorites))
   renderGamesList()
-  renderFavorites()
-}
-
-function renderFavorites() {
-  const favoritesList = document.getElementById("favoritesList")
-
-  if (favorites.length === 0) {
-    favoritesList.innerHTML = '<div class="no-favorites">Star games to see them here!</div>'
-    return
-  }
-
-  favoritesList.innerHTML = ""
-  const favoriteGames = games.filter((game) => favorites.includes(game.id))
-
-  favoriteGames.forEach((game) => {
-    const gameItem = createGameItem(game, true)
-    favoritesList.appendChild(gameItem)
-  })
 }
 
 // create game item element
-function createGameItem(game, isFavorite = false) {
+function createGameItem(game) {
   const gameItem = document.createElement("div")
   gameItem.className = "game-item"
   gameItem.onclick = () => loadGame(game)
@@ -606,7 +605,7 @@ function renderGamesList() {
 function loadGame(game) {
   currentGame = game
 
-  // update da active state
+  // update active state
   document.querySelectorAll(".game-item").forEach((item) => item.classList.remove("active"))
   event.currentTarget.classList.add("active")
 
@@ -661,6 +660,66 @@ function toggleFullscreen() {
   }
 }
 
+// web proxy functionality
+function openProxy() {
+  const proxyUrl = document.getElementById("proxyUrl").value
+  const proxyFrame = document.getElementById("proxyFrame")
+  const proxyFrameContainer = document.getElementById("proxyFrameContainer")
+
+  if (proxyUrl) {
+    // Use a simple proxy service (note: this is basic and may not work for all sites)
+    const proxiedUrl = `https://cors-anywhere.herokuapp.com/${proxyUrl}`
+    proxyFrame.src = proxiedUrl
+    proxyFrameContainer.classList.add("show")
+  }
+}
+
+// AI chatbot functionality
+function sendMessage() {
+  const chatInput = document.getElementById("chatInput")
+  const chatMessages = document.getElementById("chatMessages")
+  const message = chatInput.value.trim()
+
+  if (message) {
+    // Add user message
+    const userMessage = document.createElement("div")
+    userMessage.className = "chat-message user-message"
+    userMessage.innerHTML = `
+      <div class="message-avatar">
+        <i class="ri-user-line"></i>
+      </div>
+      <div class="message-content">${message}</div>
+    `
+    chatMessages.appendChild(userMessage)
+
+    // Clear input
+    chatInput.value = ""
+
+    // Add bot response after a delay
+    setTimeout(() => {
+      const botMessage = document.createElement("div")
+      botMessage.className = "chat-message bot-message"
+      const randomResponse = aiResponses[Math.floor(Math.random() * aiResponses.length)]
+      botMessage.innerHTML = `
+        <div class="message-avatar">
+          <i class="ri-robot-line"></i>
+        </div>
+        <div class="message-content">${randomResponse}</div>
+      `
+      chatMessages.appendChild(botMessage)
+      chatMessages.scrollTop = chatMessages.scrollHeight
+    }, 1000)
+
+    chatMessages.scrollTop = chatMessages.scrollHeight
+  }
+}
+
+function handleChatKeyPress(event) {
+  if (event.key === "Enter") {
+    sendMessage()
+  }
+}
+
 // render bookmarklets
 function renderBookmarklets() {
   const bookmarkletsGrid = document.getElementById("bookmarkletsGrid")
@@ -708,7 +767,18 @@ function setupSearch() {
         `
         item.addEventListener("click", () => {
           showSection("games")
-          setTimeout(() => loadGame(game), 100)
+          setTimeout(() => {
+            loadGame(game)
+            // Find and activate the game item
+            const gameItems = document.querySelectorAll(".game-item")
+            gameItems.forEach((item) => {
+              if (item.querySelector(".game-title").textContent === game.title) {
+                item.classList.add("active")
+              } else {
+                item.classList.remove("active")
+              }
+            })
+          }, 100)
           input.value = ""
           dropdown.classList.remove("show")
         })
@@ -768,6 +838,9 @@ function setupMobileMenu() {
 function setupSettings() {
   const disguiseSelect = document.getElementById("disguiseSelect")
   const themeSelect = document.getElementById("themeSelect")
+  const backgroundSelect = document.getElementById("backgroundSelect")
+  const animationSpeed = document.getElementById("animationSpeed")
+  const panicKeySelect = document.getElementById("panicKeySelect")
 
   disguiseSelect.addEventListener("change", function () {
     changeDisguise(this.value)
@@ -778,12 +851,31 @@ function setupSettings() {
     changeTheme(this.value)
     localStorage.setItem("cosmic_theme", this.value)
   })
+
+  backgroundSelect.addEventListener("change", function () {
+    changeBackground(this.value)
+    localStorage.setItem("cosmic_background", this.value)
+  })
+
+  animationSpeed.addEventListener("change", function () {
+    changeAnimationSpeed(this.value)
+    localStorage.setItem("cosmic_animation_speed", this.value)
+  })
+
+  panicKeySelect.addEventListener("change", function () {
+    panicKey = this.value
+    localStorage.setItem("cosmic_panic_key", this.value)
+    setupPanicKey()
+  })
 }
 
 // load saved settings
 function loadSettings() {
   const savedDisguise = localStorage.getItem("cosmic_disguise")
   const savedTheme = localStorage.getItem("cosmic_theme")
+  const savedBackground = localStorage.getItem("cosmic_background")
+  const savedAnimationSpeed = localStorage.getItem("cosmic_animation_speed")
+  const savedPanicKey = localStorage.getItem("cosmic_panic_key")
 
   if (savedDisguise) {
     document.getElementById("disguiseSelect").value = savedDisguise
@@ -794,6 +886,21 @@ function loadSettings() {
     document.getElementById("themeSelect").value = savedTheme
     changeTheme(savedTheme)
   }
+
+  if (savedBackground) {
+    document.getElementById("backgroundSelect").value = savedBackground
+    changeBackground(savedBackground)
+  }
+
+  if (savedAnimationSpeed) {
+    document.getElementById("animationSpeed").value = savedAnimationSpeed
+    changeAnimationSpeed(savedAnimationSpeed)
+  }
+
+  if (savedPanicKey) {
+    document.getElementById("panicKeySelect").value = savedPanicKey
+    panicKey = savedPanicKey
+  }
 }
 
 // change tab disguise
@@ -801,7 +908,7 @@ function changeDisguise(type) {
   const disguises = {
     default: {
       title: "cosmic.",
-      icon: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwMDAwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTcgNkMzLjY5IDYgMSAxLjY5IDEgMTJTMy42OSAxOCA3IDE4SDE3QzIwLjMxIDE4IDIzIDE1LjMxIDIzIDEyUzIwLjMxIDYgMTcgNkg3Wk03IDhIMTdDMTkuMjEgOCAyMSA5Ljc5IDIxIDEyUzE5LjIxIDE2IDE3IDE2SDdDNC43OSAxNiAzIDE0LjIxIDMgMTJTNC43OSA4IDcgOFpNOSAxMEM4LjQ1IDEwIDggMTAuNDUgOCAxMVM4LjQ1IDEyIDkgMTJTMTAgMTEuNTUgMTAgMTFTOS41NSAxMCA5IDEwWk0xNSAxMEMxNC40NSAxMCAxNCAxMC40NSAxNCAxMVMxNC40NSAxMiAxNSAxMlMxNiAxMS41NSAxNiAxMVMxNS41NSAxMCAxNSAxMFpNNyAxNEM2LjQ1IDE0IDYgMTQuNDUgNiAxNVM2LjQ1IDE2IDcgMTZTOCAxNS41NSA4IDE1UzcuNTUgMTQgNyAxNFpNMTcgMTRDMTYuNDUgMTQgMTYgMTQuNDUgMTYgMTVTMTYuNDUgMTYgMTcgMTZTMTggMTUuNTUgMTggMTVTMTcuNTUgMTQgMTcgMTRaIiBmaWxsPSIjZWM0ODk5Ii8+Cjwvc3ZnPgo=",
+      icon: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwMDAwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTcgNkMzLjY5IDYgMSA4LjY5IDEgMTJTMy42OSAxOCA3IDE4SDE3QzIwLjMxIDE4IDIzIDE1LjMxIDIzIDEyUzIwLjMxIDYgMTcgNkg3Wk03IDhIMTdDMTkuMjEgOCAyMSA5Ljc5IDIxIDEyUzE5LjIxIDE2IDE3IDE2SDdDNC43OSAxNiAzIDE0LjIxIDMgMTJTNC43OSA4IDcgOFpNOSAxMEM4LjQ1IDEwIDggMTAuNDUgOCAxMVM4LjQ1IDEyIDkgMTJTMTAgMTEuNTUgMTAgMTFTOS41NSAxMCA5IDEwWk0xNSAxMEMxNC40NSAxMCAxNCAxMC40NSAxNCAxMVMxNC40NSAxMiAxNSAxMlMxNiAxMS41NSAxNiAxMVMxNS41NSAxMCAxNSAxMFpNNyAxNEM2LjQ1IDE0IDYgMTQuNDUgNiAxNVM2LjQ1IDE2IDcgMTZTOCAxNS41NSA4IDE1UzcuNTUgMTQgNyAxNFpNMTcgMTRDMTYuNDUgMTQgMTYgMTQuNDUgMTYgMTVTMTYuNDUgMTYgMTcgMTZTMTggMTUuNTUgMTggMTVTMTcuNTUgMTQgMTcgMTRaIiBmaWxsPSIjZWM0ODk5Ii8+Cjwvc3ZnPgo=",
     },
     google: { title: "Google", icon: "https://www.google.com/favicon.ico" },
     drive: {
@@ -827,6 +934,166 @@ function changeTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme)
 }
 
+// change background effects
+function changeBackground(type) {
+  const starsContainer = document.getElementById("starsContainer")
+  const mountainBackground = document.getElementById("mountainBackground")
+
+  // Reset all backgrounds
+  starsContainer.style.display = "none"
+  mountainBackground.classList.remove("show")
+
+  switch (type) {
+    case "stars":
+      starsContainer.style.display = "block"
+      break
+    case "mountains":
+      mountainBackground.classList.add("show")
+      break
+    case "particles":
+      starsContainer.style.display = "block"
+      // Add particle effects (simplified)
+      break
+    case "none":
+      // All backgrounds hidden
+      break
+  }
+}
+
+// change animation speed
+function changeAnimationSpeed(speed) {
+  document.body.className = document.body.className.replace(/\b(slow|fast)-animation\b/g, "")
+
+  if (speed === "slow") {
+    document.body.classList.add("slow-animation")
+  } else if (speed === "fast") {
+    document.body.classList.add("fast-animation")
+  }
+}
+
+// setup panic key
+function setupPanicKey() {
+  // Remove existing event listeners
+  document.removeEventListener("keydown", handlePanicKey)
+
+  if (panicKey !== "none") {
+    document.addEventListener("keydown", handlePanicKey)
+  }
+}
+
+function handlePanicKey(event) {
+  let shouldPanic = false
+
+  switch (panicKey) {
+    case "escape":
+      shouldPanic = event.key === "Escape"
+      break
+    case "space":
+      shouldPanic = event.key === " "
+      break
+    case "ctrl+shift+x":
+      shouldPanic = event.ctrlKey && event.shiftKey && event.key === "X"
+      break
+  }
+
+  if (shouldPanic) {
+    window.location.href = "https://www.google.com"
+  }
+}
+
+// setup background effects
+function setupBackgroundEffects() {
+  const savedBackground = localStorage.getItem("cosmic_background") || "stars"
+  changeBackground(savedBackground)
+}
+
+// export settings
+function exportSettings() {
+  const settings = {
+    theme: localStorage.getItem("cosmic_theme") || "cosmic",
+    disguise: localStorage.getItem("cosmic_disguise") || "default",
+    background: localStorage.getItem("cosmic_background") || "stars",
+    animationSpeed: localStorage.getItem("cosmic_animation_speed") || "normal",
+    panicKey: localStorage.getItem("cosmic_panic_key") || "none",
+    favorites: JSON.parse(localStorage.getItem("cosmic_favorites")) || [],
+  }
+
+  const dataStr = JSON.stringify(settings, null, 2)
+  const dataBlob = new Blob([dataStr], { type: "application/json" })
+  const url = URL.createObjectURL(dataBlob)
+
+  const link = document.createElement("a")
+  link.href = url
+  link.download = "cosmic-settings.json"
+  link.click()
+
+  URL.revokeObjectURL(url)
+}
+
+// import settings
+function importSettings() {
+  const input = document.createElement("input")
+  input.type = "file"
+  input.accept = ".json"
+
+  input.onchange = (event) => {
+    const file = event.target.files[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        try {
+          const settings = JSON.parse(e.target.result)
+
+          // Apply imported settings
+          if (settings.theme) {
+            localStorage.setItem("cosmic_theme", settings.theme)
+            document.getElementById("themeSelect").value = settings.theme
+            changeTheme(settings.theme)
+          }
+
+          if (settings.disguise) {
+            localStorage.setItem("cosmic_disguise", settings.disguise)
+            document.getElementById("disguiseSelect").value = settings.disguise
+            changeDisguise(settings.disguise)
+          }
+
+          if (settings.background) {
+            localStorage.setItem("cosmic_background", settings.background)
+            document.getElementById("backgroundSelect").value = settings.background
+            changeBackground(settings.background)
+          }
+
+          if (settings.animationSpeed) {
+            localStorage.setItem("cosmic_animation_speed", settings.animationSpeed)
+            document.getElementById("animationSpeed").value = settings.animationSpeed
+            changeAnimationSpeed(settings.animationSpeed)
+          }
+
+          if (settings.panicKey) {
+            localStorage.setItem("cosmic_panic_key", settings.panicKey)
+            document.getElementById("panicKeySelect").value = settings.panicKey
+            panicKey = settings.panicKey
+            setupPanicKey()
+          }
+
+          if (settings.favorites) {
+            localStorage.setItem("cosmic_favorites", JSON.stringify(settings.favorites))
+            favorites = settings.favorites
+            renderGamesList()
+          }
+
+          alert("Settings imported successfully!")
+        } catch (error) {
+          alert("Error importing settings. Please check the file format.")
+        }
+      }
+      reader.readAsText(file)
+    }
+  }
+
+  input.click()
+}
+
 // open in about:blank
 function openInAboutBlank() {
   const newWindow = window.open("about:blank", "_blank")
@@ -849,30 +1116,57 @@ function openInAboutBlank() {
 
 // reset settings
 function resetSettings() {
-  localStorage.removeItem("cosmic_disguise")
-  localStorage.removeItem("cosmic_theme")
-  localStorage.removeItem("cosmic_favorites")
-  favorites = []
-  currentGame = null
-  document.getElementById("disguiseSelect").value = "default"
-  document.getElementById("themeSelect").value = "cosmic"
-  changeDisguise("default")
-  changeTheme("cosmic")
-  renderGamesList()
-  renderFavorites()
+  if (confirm("Are you sure you want to reset all settings? This cannot be undone.")) {
+    localStorage.removeItem("cosmic_disguise")
+    localStorage.removeItem("cosmic_theme")
+    localStorage.removeItem("cosmic_background")
+    localStorage.removeItem("cosmic_animation_speed")
+    localStorage.removeItem("cosmic_panic_key")
+    localStorage.removeItem("cosmic_favorites")
 
-  // reset game player
-  document.getElementById("currentGameTitle").textContent = "Select a game to play"
-  document.getElementById("gameContainer").innerHTML = `
-    <div class="no-game-selected">
-      <i class="ri-gamepad-line"></i>
-      <h3>Choose a game from the list</h3>
-      <p>Click on any game from the sidebar to start playing</p>
-    </div>
-  `
-  document.getElementById("newTabBtn").disabled = true
-  document.getElementById("aboutBlankBtn").disabled = true
-  document.getElementById("fullscreenBtn").disabled = true
+    favorites = []
+    currentGame = null
+    panicKey = "none"
 
-  alert("Settings reset successfully!")
+    document.getElementById("disguiseSelect").value = "default"
+    document.getElementById("themeSelect").value = "cosmic"
+    document.getElementById("backgroundSelect").value = "stars"
+    document.getElementById("animationSpeed").value = "normal"
+    document.getElementById("panicKeySelect").value = "none"
+
+    changeDisguise("default")
+    changeTheme("cosmic")
+    changeBackground("stars")
+    changeAnimationSpeed("normal")
+    setupPanicKey()
+    renderGamesList()
+
+    // reset game player
+    document.getElementById("currentGameTitle").textContent = "Select a game to play"
+    document.getElementById("gameContainer").innerHTML = `
+      <div class="no-game-selected">
+        <i class="ri-gamepad-line"></i>
+        <h3>Choose a game from the list</h3>
+        <p>Click on any game from the sidebar to start playing</p>
+      </div>
+    `
+    document.getElementById("newTabBtn").disabled = true
+    document.getElementById("aboutBlankBtn").disabled = true
+    document.getElementById("fullscreenBtn").disabled = true
+
+    alert("Settings reset successfully!")
+  }
+}
+
+// footer functions
+function showPrivacyPolicy() {
+  alert(
+    "Privacy Policy: We respect your privacy. This site does not collect personal data. All settings are stored locally in your browser.",
+  )
+}
+
+function showTerms() {
+  alert(
+    "Terms of Service: By using this site, you agree to use it responsibly and in accordance with your local laws and regulations.",
+  )
 }
