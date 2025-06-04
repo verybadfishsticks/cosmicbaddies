@@ -21,6 +21,9 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 </head>
 <body>
+    <!-- Mountain Background -->
+    <div class="mountain-background" id="mountainBackground"></div>
+    
     <!-- Stars Background -->
     <div class="stars-container" id="starsContainer"></div>
 
@@ -52,6 +55,7 @@
             
             <div class="nav-links">
                 <span class="nav-link" onclick="showSection('games')">games</span>
+                <span class="nav-link" onclick="showSection('tools')">tools</span>
                 <span class="nav-link" onclick="showSection('bookmarklets')">bookmarklets</span>
                 <span class="nav-link" onclick="showSection('settings')">settings</span>
             </div>
@@ -76,6 +80,7 @@
             </div>
             <div class="mobile-nav-links">
                 <span class="mobile-nav-link" onclick="showSection('games')">Games</span>
+                <span class="mobile-nav-link" onclick="showSection('tools')">Tools</span>
                 <span class="mobile-nav-link" onclick="showSection('bookmarklets')">Bookmarklets</span>
                 <span class="mobile-nav-link" onclick="showSection('settings')">Settings</span>
             </div>
@@ -98,11 +103,7 @@
             <!-- Games Sidebar -->
             <div class="games-sidebar">
                 <div class="sidebar-header">
-                    <h2 class="sidebar-title">
-
-                    </h2>
-                
-                    
+                    <h2 class="sidebar-title"></h2>
                     <h3 class="all-games-title">
                         <i class="ri-grid-fill"></i>
                         all games
@@ -144,6 +145,80 @@
         </div>
     </section>
 
+    <!-- Tools Section -->
+    <section id="tools" class="page-section hidden">
+        <div class="tools-section">
+            <h2 class="section-title">cosmic tools</h2>
+            <p class="section-subtitle">
+                powerful tools to enhance your browsing experience.
+            </p>
+            
+            <div class="tools-grid">
+                <!-- Web Proxy Tool -->
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <i class="ri-global-line tool-icon"></i>
+                        <h3 class="tool-title">web proxy</h3>
+                    </div>
+                    <p class="tool-description">
+                        Access blocked websites through our secure web proxy.
+                    </p>
+                    <div class="proxy-container">
+                        <div class="proxy-input-group">
+                            <input 
+                                type="url" 
+                                class="proxy-input" 
+                                placeholder="Enter website URL..." 
+                                id="proxyUrl"
+                            >
+                            <button class="proxy-btn" onclick="openProxy()">
+                                <i class="ri-arrow-right-line"></i>
+                            </button>
+                        </div>
+                        <div class="proxy-frame-container" id="proxyFrameContainer">
+                            <iframe id="proxyFrame" class="proxy-frame"></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Chatbot Tool -->
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <i class="ri-robot-line tool-icon"></i>
+                        <h3 class="tool-title">ai assistant</h3>
+                    </div>
+                    <p class="tool-description">
+                        Chat with our AI assistant for help and information.
+                    </p>
+                    <div class="chatbot-container">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="chat-message bot-message">
+                                <div class="message-avatar">
+                                    <i class="ri-robot-line"></i>
+                                </div>
+                                <div class="message-content">
+                                    Hello! I'm your AI assistant. How can I help you today?
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-input-container">
+                            <input 
+                                type="text" 
+                                class="chat-input" 
+                                placeholder="Type your message..." 
+                                id="chatInput"
+                                onkeypress="handleChatKeyPress(event)"
+                            >
+                            <button class="chat-send-btn" onclick="sendMessage()">
+                                <i class="ri-send-plane-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Bookmarklets Section -->
     <section id="bookmarklets" class="page-section hidden">
         <div class="bookmarklets-section">
@@ -164,7 +239,7 @@
             </p>
             
             <div class="settings-group">
-                <h3>theme</h3>
+                <h3>appearance</h3>
                 <div class="setting-item">
                     <label class="setting-label">choose your theme:</label>
                     <select class="setting-select" id="themeSelect">
@@ -178,10 +253,27 @@
                         <option value="sunset">cosmic sunset</option>
                     </select>
                 </div>
+                <div class="setting-item">
+                    <label class="setting-label">background effects:</label>
+                    <select class="setting-select" id="backgroundSelect">
+                        <option value="stars">floating stars</option>
+                        <option value="mountains">mountain landscape</option>
+                        <option value="particles">particle effects</option>
+                        <option value="none">none</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label class="setting-label">animation speed:</label>
+                    <select class="setting-select" id="animationSpeed">
+                        <option value="slow">slow</option>
+                        <option value="normal">normal</option>
+                        <option value="fast">fast</option>
+                    </select>
+                </div>
             </div>
 
             <div class="settings-group">
-                <h3>tab disguise</h3>
+                <h3>privacy & security</h3>
                 <div class="setting-item">
                     <label class="setting-label">change favicon and title to disguise this tab:</label>
                     <select class="setting-select" id="disguiseSelect">
@@ -194,6 +286,43 @@
                         <option value="canvas">Canvas</option>
                     </select>
                 </div>
+                <div class="setting-item">
+                    <label class="setting-label">panic key (press to quickly hide):</label>
+                    <select class="setting-select" id="panicKeySelect">
+                        <option value="none">disabled</option>
+                        <option value="escape">escape key</option>
+                        <option value="space">space bar</option>
+                        <option value="ctrl+shift+x">ctrl+shift+x</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label class="setting-label">auto-clear history:</label>
+                    <select class="setting-select" id="autoClearHistory">
+                        <option value="disabled">disabled</option>
+                        <option value="session">on session end</option>
+                        <option value="daily">daily</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <h3>performance</h3>
+                <div class="setting-item">
+                    <label class="setting-label">game quality:</label>
+                    <select class="setting-select" id="gameQuality">
+                        <option value="auto">auto</option>
+                        <option value="high">high quality</option>
+                        <option value="medium">medium quality</option>
+                        <option value="low">low quality</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label class="setting-label">preload games:</label>
+                    <select class="setting-select" id="preloadGames">
+                        <option value="enabled">enabled</option>
+                        <option value="disabled">disabled</option>
+                    </select>
+                </div>
             </div>
 
             <div class="settings-group">
@@ -203,6 +332,14 @@
                         <i class="ri-external-link-line"></i>
                         open in about:blank
                     </button>
+                    <button class="setting-button" onclick="exportSettings()">
+                        <i class="ri-download-line"></i>
+                        export settings
+                    </button>
+                    <button class="setting-button" onclick="importSettings()">
+                        <i class="ri-upload-line"></i>
+                        import settings
+                    </button>
                     <button class="setting-button" onclick="resetSettings()">
                         <i class="ri-refresh-line"></i>
                         reset all settings
@@ -211,6 +348,48 @@
             </div>
         </div>
     </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4 class="footer-title">cosmic.</h4>
+                    <p class="footer-description">
+                        Your ultimate destination for unblocked gaming and tools.
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Quick Links</h4>
+                    <div class="footer-links">
+                        <a href="#" onclick="showSection('home')" class="footer-link">Home</a>
+                        <a href="#" onclick="showSection('games')" class="footer-link">Games</a>
+                        <a href="#" onclick="showSection('tools')" class="footer-link">Tools</a>
+                        <a href="#" onclick="showSection('settings')" class="footer-link">Settings</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Legal</h4>
+                    <div class="footer-links">
+                        <a href="#" onclick="showPrivacyPolicy()" class="footer-link">Privacy Policy</a>
+                        <a href="#" onclick="showTerms()" class="footer-link">Terms of Service</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Community</h4>
+                    <div class="footer-links">
+                        <a href="https://discord.gg/wT7u27Wbm6" target="_blank" class="footer-link">
+                            <i class="ri-discord-fill"></i>
+                            Discord
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 cosmic. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
     <script src="assets/scripts.js"></script>
 </body>
