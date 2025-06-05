@@ -1,12 +1,13 @@
 // Global variables
 let games = []
+let filteredGames = []
 let currentPhraseIndex = 0
 let currentCharIndex = 0
 let isDeleting = false
 let typingSpeed = 65
-let favorites = JSON.parse(localStorage.getItem("cosmic_favorites")) || []
 let currentGame = null
 let panicKey = localStorage.getItem("cosmic_panic_key") || "none"
+const favorites = JSON.parse(localStorage.getItem("cosmic_favorites")) || [] // Declare favorites variable
 
 // Groq AI configuration
 const GROQ_API_KEY = "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"
@@ -55,61 +56,458 @@ const bookmarklets = [
   },
 ]
 
-// Fetch games from external API
-async function fetchGames() {
-  try {
-    const response = await fetch("https://list.classroomsarecool.mex.com")
-    const htmlContent = await response.text()
+// Load games from the API
+function loadGames() {
+  fetch("https://list.classroomsarecool.mex.com")
+    .then((response) => response.text())
+    .then((data) => {
+      const tempDiv = document.createElement("div")
+      tempDiv.innerHTML = data
 
-    // Parse the HTML content to extract games
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(htmlContent, "text/html")
+      const links = tempDiv.querySelectorAll("a")
+      const gamesGrid = document.getElementById("games-grid")
 
-    // Find all game links with the format <a data-href="game-id"><img src="icon-url"></a>
-    const gameLinks = doc.querySelectorAll("a[data-href]")
+      gamesGrid.innerHTML = ""
+      games = []
 
-    games = Array.from(gameLinks)
-      .map((link) => {
-        const gameId = link.getAttribute("data-href")
+      links.forEach((link, index) => {
         const img = link.querySelector("img")
-        const imgSrc = img ? img.getAttribute("src") : ""
+        const id = link.getAttribute("id") || ""
+        const dataUrl = link.getAttribute("data-url") || ""
 
-        // Extract game title from image alt or data attributes
-        let title = img ? img.getAttribute("alt") || img.getAttribute("title") || "" : ""
-        if (!title) {
-          // Try to extract title from the game ID
-          title = gameId.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())
-        }
+        // Determine category
+        const categories = ["action", "puzzle", "strategy", "arcade", "sports"]
+        const category = categories[Math.floor(Math.random() * categories.length)]
 
-        return {
-          id: gameId,
-          title: title,
-          icon: imgSrc.startsWith("http") ? imgSrc : `https://list.classroomsarecool.mex.com${imgSrc}`,
-          url: `https://list.classroomsarecool.mex.com/games/${gameId}/`,
+        if (img) {
+          // Store game data
+          games.push({
+            id: id,
+            title: img.title || "Game",
+            icon: img.src,
+            url: dataUrl,
+            category: category,
+          })
         }
       })
-      .filter((game) => game.id && game.title) // Filter out invalid games
 
-    console.log(`Loaded ${games.length} games from API`)
-    renderGamesList()
-  } catch (error) {
-    console.error("Error fetching games:", error)
-    // Fallback to a few default games if API fails
-    games = [
-      {
-        id: "slope",
-        title: "Slope",
-        icon: "https://cyberschool-lol.w3spaces.com/img/slope.jpg",
-        url: "https://cyberschool-lol.w3spaces.com/g/slope.html",
-      },
-      {
-        id: "2048",
-        title: "2048",
-        icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC8LNTs0AsLHpjdIA4lSOst9zVgCp_QpE1l4gUp7pwaiKz6VIGgDgDQnhPSVBsDqYVbf4&usqp=CAU",
-        url: "https://cyberschool-lol.w3spaces.com/g/2048.html",
-      },
-    ]
-    renderGamesList()
+      // Render games
+      filteredGames = [...games]
+      renderGames()
+      setupGameFilters()
+      console.log(`Loaded ${games.length} games from https://list.classroomsarecool.mex.com`)
+    })
+    .catch((error) => {
+      console.error("Error loading games:", error)
+      // Fallback games
+      games = [
+        {
+          id: "slope",
+          title: "Slope",
+          icon: "https://images.crazygames.com/slope/20200917083022/slope-cover?auto=format%2Ccompress&q=45&cs=strip&ch=DPR&w=1200&h=630&fit=crop",
+          url: "https://slope-game.github.io/",
+          category: "action",
+        },
+        {
+          id: "2048",
+          title: "2048",
+          icon: "https://play-lh.googleusercontent.com/JMNWaZel_qg6qj2Kbbh1YZ1RxZ3iFmBxTRCThF9Qn-uX0t-j12B3dHIWgY8Vr9Rr_Q",
+          url: "https://play2048.co/",
+          category: "puzzle",
+        },
+        {
+          id: "tetris",
+          title: "Tetris",
+          icon: "https://play-lh.googleusercontent.com/za2Nu_qjMw5GzWfbzet4zeiZT1vPhjzVZ5sQpfT1HG8BUMrYXZgDdmNJUYHDXQpYEFs",
+          url: "https://tetris.com/play-tetris",
+          category: "puzzle",
+        },
+        {
+          id: "minecraft",
+          title: "Minecraft Classic",
+          icon: "https://www.minecraft.net/content/dam/games/minecraft/key-art/Games_Subnav_Minecraft-300x465.jpg",
+          url: "https://classic.minecraft.net/",
+          category: "action",
+        },
+        {
+          id: "snake",
+          title: "Snake",
+          icon: "https://img.poki.com/cdn-cgi/image/quality=78,width=600,height=600,fit=cover,f=auto/12a0ed7c6bc09b73d6558c6f69ed7f5f.png",
+          url: "https://www.google.com/fbx?fbx=snake_arcade",
+          category: "arcade",
+        },
+      ]
+
+      filteredGames = [...games]
+      renderGames()
+      setupGameFilters()
+    })
+}
+
+// Render games in square layout
+function renderGames() {
+  const gamesGrid = document.getElementById("games-grid")
+  gamesGrid.innerHTML = ""
+
+  if (filteredGames.length === 0) {
+    gamesGrid.innerHTML = `
+      <div class="no-games-found">
+        <i class="ri-search-line"></i>
+        <h3>No games found</h3>
+        <p>Try adjusting your search or filter criteria.</p>
+      </div>
+    `
+    return
+  }
+
+  filteredGames.forEach((game, index) => {
+    const gameButton = document.createElement("div")
+    gameButton.className = "game-button"
+    gameButton.setAttribute("data-category", game.category)
+
+    // Add click event to open the game
+    gameButton.addEventListener("click", () => {
+      window.open(game.url, "_blank")
+    })
+
+    const gameImg = document.createElement("img")
+    gameImg.src = game.icon
+    gameImg.alt = game.title
+    gameImg.loading = "lazy"
+
+    const overlayText = document.createElement("div")
+    overlayText.className = "overlay-text"
+    overlayText.textContent = game.title
+
+    gameButton.appendChild(gameImg)
+    gameButton.appendChild(overlayText)
+
+    gameButton.style.animationDelay = `${index * 0.05}s`
+
+    gamesGrid.appendChild(gameButton)
+  })
+}
+
+// Setup game category filters
+function setupGameFilters() {
+  const filterButtons = document.querySelectorAll(".filter-btn")
+
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      // Remove active class from all buttons
+      filterButtons.forEach((btn) => btn.classList.remove("active"))
+
+      // Add active class to clicked button
+      button.classList.add("active")
+
+      // Get selected category
+      const category = button.getAttribute("data-category")
+
+      // Filter games
+      filterGames(category)
+    })
+  })
+}
+
+// Filter games by category
+function filterGames(category) {
+  if (category === "all") {
+    filteredGames = [...games]
+  } else {
+    filteredGames = games.filter((game) => game.category === category)
+  }
+  renderGames()
+}
+
+// Search games functionality
+function setupGamesSearch() {
+  const gamesSearchInput = document.getElementById("gamesSearchInput")
+
+  gamesSearchInput.addEventListener("input", (e) => {
+    const query = e.target.value.toLowerCase().trim()
+
+    if (query === "") {
+      filteredGames = [...games]
+    } else {
+      filteredGames = games.filter((game) => game.title.toLowerCase().includes(query))
+    }
+
+    renderGames()
+  })
+}
+
+// Open game in modal - updated to use data-url
+function openGame(id, title, url) {
+  // Set current game
+  currentGame = {
+    id: id,
+    title: title,
+    url: url, // This will be the data-url from the response
+  }
+
+  // Update game title
+  document.getElementById("currentGameTitle").textContent = title
+
+  // Create iframe with the data-url
+  const gameContainer = document.getElementById("gameContainer")
+
+  // If no URL is provided, show error message
+  if (!url || url === "") {
+    gameContainer.innerHTML = `
+      <div class="no-game-selected">
+        <i class="ri-alert-line"></i>
+        <h3>Game URL not available</h3>
+        <p>This game doesn't have a valid URL to load.</p>
+      </div>
+    `
+  } else {
+    gameContainer.innerHTML = `<iframe src="${url}" class="game-iframe" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>`
+  }
+
+  // Show modal
+  const gameModal = document.getElementById("gameModal")
+  gameModal.classList.add("show")
+
+  // Disable scrolling on body
+  document.body.style.overflow = "hidden"
+
+  console.log(`Loading game: ${title} with URL: ${url}`)
+}
+
+// Close game modal
+function closeGameModal() {
+  const gameModal = document.getElementById("gameModal")
+  gameModal.classList.remove("show")
+
+  // Clear iframe to stop game
+  const gameContainer = document.getElementById("gameContainer")
+  gameContainer.innerHTML = ""
+
+  // Enable scrolling on body
+  document.body.style.overflow = ""
+}
+
+// Custom proxy server implementation
+class SimpleProxy {
+  constructor() {
+    this.proxyFrame = null
+    this.proxyContainer = null
+    this.currentUrl = null
+    this.isLoading = false
+  }
+
+  // Initialize the proxy
+  init() {
+    this.proxyFrame = document.getElementById("proxyFrame")
+    this.proxyContainer = document.getElementById("proxyFrameContainer")
+
+    if (!this.proxyFrame || !this.proxyContainer) {
+      console.error("Proxy elements not found")
+      return
+    }
+
+    // Create proxy server endpoint
+    this.createProxyEndpoint()
+  }
+
+  // Create a service worker for the proxy if supported
+  createProxyEndpoint() {
+    if ("serviceWorker" in navigator) {
+      // Register a service worker for proxy functionality
+      navigator.serviceWorker
+        .register("/proxy-worker.js")
+        .then((registration) => {
+          console.log("Proxy service worker registered:", registration)
+        })
+        .catch((error) => {
+          console.error("Service worker registration failed:", error)
+        })
+    }
+  }
+
+  // Load URL in proxy
+  loadUrl(url) {
+    if (!url) {
+      alert("Please enter a URL to browse")
+      return false
+    }
+
+    // Ensure URL has protocol
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      url = "https://" + url
+    }
+
+    this.currentUrl = url
+    this.isLoading = true
+
+    try {
+      // Show loading state
+      this.proxyContainer.classList.add("loading")
+      this.proxyContainer.classList.add("show")
+
+      // Use data URL approach for simple sites
+      const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>${url}</title>
+          <style>
+            body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+            .proxy-frame { width: 100%; height: 100%; border: none; }
+            .proxy-message { 
+              font-family: Arial, sans-serif; 
+              padding: 20px; 
+              text-align: center;
+              color: #333;
+            }
+            .proxy-header {
+              background: #f1f1f1;
+              padding: 10px;
+              border-bottom: 1px solid #ddd;
+              display: flex;
+              align-items: center;
+            }
+            .proxy-url {
+              flex: 1;
+              padding: 5px;
+              margin: 0 10px;
+              font-size: 14px;
+            }
+            .proxy-btn {
+              background: #4285f4;
+              color: white;
+              border: none;
+              padding: 5px 10px;
+              border-radius: 3px;
+              cursor: pointer;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="proxy-header">
+            <span>Browsing: ${url}</span>
+          </div>
+          <iframe src="${url}" class="proxy-frame" sandbox="allow-forms allow-scripts allow-same-origin"></iframe>
+          <script>
+            // Handle iframe load errors
+            document.querySelector('.proxy-frame').onerror = function() {
+              this.style.display = 'none';
+              document.body.innerHTML += '<div class="proxy-message">Unable to load the requested website. The site may be blocking iframe access or require authentication.</div>';
+            };
+          </script>
+        </body>
+        </html>
+      `
+
+      // Use a data URL to load the content
+      this.proxyFrame.src = `data:text/html;charset=utf-8,${encodeURIComponent(htmlContent)}`
+
+      // Handle load events
+      this.proxyFrame.onload = () => {
+        this.isLoading = false
+        this.proxyContainer.classList.remove("loading")
+      }
+
+      this.proxyFrame.onerror = () => {
+        this.isLoading = false
+        this.proxyContainer.classList.remove("loading")
+        alert("Failed to load the website. The site may be blocking iframe access.")
+      }
+
+      return true
+    } catch (error) {
+      console.error("Error loading proxy:", error)
+      this.proxyContainer.classList.remove("loading")
+      this.proxyContainer.classList.remove("show")
+      alert("Failed to load the proxy. Please try again.")
+      return false
+    }
+  }
+
+  // Open URL in new tab
+  openInNewTab(url) {
+    if (!url) url = this.currentUrl
+    if (!url) {
+      url = document.getElementById("proxyUrl").value.trim()
+    }
+
+    if (!url) {
+      alert("Please enter a URL to browse")
+      return
+    }
+
+    // Ensure URL has protocol
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      url = "https://" + url
+    }
+
+    // Open in new tab
+    window.open(url, "_blank")
+  }
+
+  // Close the proxy
+  close() {
+    this.proxyContainer.classList.remove("show")
+    this.proxyFrame.src = "about:blank"
+    this.currentUrl = null
+  }
+}
+
+// Create proxy instance
+const simpleProxy = new SimpleProxy()
+
+// Function to open proxy with entered URL
+function openProxy() {
+  const proxyUrl = document.getElementById("proxyUrl").value.trim()
+  simpleProxy.loadUrl(proxyUrl)
+}
+
+// Function to open proxy in new tab
+function openProxyNewTab() {
+  const proxyUrl = document.getElementById("proxyUrl").value.trim()
+  simpleProxy.openInNewTab(proxyUrl)
+}
+
+// Function to close proxy
+function closeProxy() {
+  simpleProxy.close()
+}
+
+// Update the proxy container in the tools section
+function updateProxyContainer() {
+  const proxyContainer = document.querySelector(".proxy-container")
+  if (proxyContainer) {
+    proxyContainer.innerHTML = `
+      <div class="proxy-input-group">
+        <input 
+          type="url" 
+          class="proxy-input" 
+          placeholder="Enter website URL (e.g., youtube.com)" 
+          id="proxyUrl"
+        >
+        <button class="proxy-btn" onclick="openProxy()" title="Load in frame">
+          <i class="ri-arrow-right-line"></i>
+        </button>
+        <button class="proxy-btn" onclick="openProxyNewTab()" title="Open in new tab">
+          <i class="ri-external-link-line"></i>
+        </button>
+      </div>
+      <div class="proxy-frame-container" id="proxyFrameContainer">
+        <div class="proxy-controls">
+          <button class="proxy-control-btn" onclick="closeProxy()">
+            <i class="ri-close-line"></i>
+            Close
+          </button>
+          <button class="proxy-control-btn" onclick="openProxyNewTab()">
+            <i class="ri-external-link-line"></i>
+            Open in New Tab
+          </button>
+        </div>
+        <iframe id="proxyFrame" class="proxy-frame" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+      </div>
+    `
   }
 }
 
@@ -123,7 +521,7 @@ async function sendMessageToGroq(message) {
         Authorization: `Bearer ${GROQ_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "meta-llama/llama-4-scout-17b-16e-instruct",
+        model: "llama3-8b-8192",
         messages: [
           {
             role: "system",
@@ -154,7 +552,7 @@ async function sendMessageToGroq(message) {
       "Sorry, I'm having trouble connecting right now. Try asking about our games or features!",
       "I can help you with games, settings, or general questions about the site.",
       "Have you tried checking out our games section? There are tons of great options!",
-      "The tools section has some useful features like the web proxy.",
+      "The tools section has some useful features you might find interesting.",
     ]
     return fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)]
   }
@@ -240,12 +638,56 @@ function handleChatKeyPress(event) {
   }
 }
 
+// Game control functions
+function openGameNewTab() {
+  if (currentGame) {
+    window.open(currentGame.url, "_blank")
+  }
+}
+
+function openGameAboutBlank() {
+  if (currentGame) {
+    const newWindow = window.open("about:blank", "_blank")
+    newWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>about:blank</title>
+        <style>
+          body { margin: 0; padding: 0; overflow: hidden; background: #000; }
+          iframe { width: 100vw; height: 100vh; border: none; }
+        </style>
+      </head>
+      <body>
+        <iframe src="${currentGame.url}" allowfullscreen></iframe>
+      </body>
+      </html>
+    `)
+  }
+}
+
+function toggleFullscreen() {
+  const gameContainer = document.getElementById("gameContainer")
+  const iframe = gameContainer.querySelector("iframe")
+
+  if (!document.fullscreenElement) {
+    if (iframe) {
+      iframe.requestFullscreen()
+    } else {
+      gameContainer.requestFullscreen()
+    }
+  } else {
+    document.exitFullscreen()
+  }
+}
+
 // initialize the page
 document.addEventListener("DOMContentLoaded", () => {
   createStars()
-  fetchGames() // Fetch games from API
+  loadGames()
   renderBookmarklets()
   setupSearch()
+  setupGamesSearch()
   setupNavbar()
   setupMobileMenu()
   setupSettings()
@@ -253,6 +695,13 @@ document.addEventListener("DOMContentLoaded", () => {
   startTypingAnimation()
   setupPanicKey()
   setupBackgroundEffects()
+})
+
+// Add keyboard event listener for ESC key to close modal
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeGameModal()
+  }
 })
 
 // discord function
@@ -399,56 +848,6 @@ function loadGame(game) {
 }
 
 // game control functions
-function openGameNewTab() {
-  if (currentGame) {
-    window.open(currentGame.url, "_blank")
-  }
-}
-
-function openGameAboutBlank() {
-  if (currentGame) {
-    const newWindow = window.open("about:blank", "_blank")
-    newWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>about:blank</title>
-        <style>
-          body { margin: 0; padding: 0; overflow: hidden; background: #000; }
-          iframe { width: 100vw; height: 100vh; border: none; }
-        </style>
-      </head>
-      <body>
-        <iframe src="${currentGame.url}" allowfullscreen></iframe>
-      </body>
-      </html>
-    `)
-  }
-}
-
-function toggleFullscreen() {
-  const gameContainer = document.getElementById("gameContainer")
-
-  if (!document.fullscreenElement) {
-    gameContainer.requestFullscreen()
-  } else {
-    document.exitFullscreen()
-  }
-}
-
-// web proxy functionality
-function openProxy() {
-  const proxyUrl = document.getElementById("proxyUrl").value
-  const proxyFrame = document.getElementById("proxyFrame")
-  const proxyFrameContainer = document.getElementById("proxyFrameContainer")
-
-  if (proxyUrl) {
-    // Use a simple proxy service
-    const proxiedUrl = `https://cors-anywhere.herokuapp.com/${proxyUrl}`
-    proxyFrame.src = proxiedUrl
-    proxyFrameContainer.classList.add("show")
-  }
-}
 
 // render bookmarklets
 function renderBookmarklets() {
@@ -496,19 +895,7 @@ function setupSearch() {
           <span class="search-item-title">${game.title}</span>
         `
         item.addEventListener("click", () => {
-          showSection("games")
-          setTimeout(() => {
-            loadGame(game)
-            // Find and activate the game item
-            const gameItems = document.querySelectorAll(".game-item")
-            gameItems.forEach((item) => {
-              if (item.querySelector(".game-title").textContent === game.title) {
-                item.classList.add("active")
-              } else {
-                item.classList.remove("active")
-              }
-            })
-          }, 100)
+          window.open(game.url, "_blank")
           input.value = ""
           dropdown.classList.remove("show")
         })
@@ -571,6 +958,7 @@ function setupSettings() {
   const backgroundSelect = document.getElementById("backgroundSelect")
   const animationSpeed = document.getElementById("animationSpeed")
   const panicKeySelect = document.getElementById("panicKeySelect")
+  const fontSelect = document.getElementById("fontSelect")
 
   disguiseSelect.addEventListener("change", function () {
     changeDisguise(this.value)
@@ -597,6 +985,11 @@ function setupSettings() {
     localStorage.setItem("cosmic_panic_key", this.value)
     setupPanicKey()
   })
+
+  fontSelect.addEventListener("change", function () {
+    changeFont(this.value)
+    localStorage.setItem("cosmic_font", this.value)
+  })
 }
 
 // load saved settings
@@ -606,6 +999,7 @@ function loadSettings() {
   const savedBackground = localStorage.getItem("cosmic_background")
   const savedAnimationSpeed = localStorage.getItem("cosmic_animation_speed")
   const savedPanicKey = localStorage.getItem("cosmic_panic_key")
+  const savedFont = localStorage.getItem("cosmic_font")
 
   if (savedDisguise) {
     document.getElementById("disguiseSelect").value = savedDisguise
@@ -631,6 +1025,11 @@ function loadSettings() {
     document.getElementById("panicKeySelect").value = savedPanicKey
     panicKey = savedPanicKey
   }
+
+  if (savedFont) {
+    document.getElementById("fontSelect").value = savedFont
+    changeFont(savedFont)
+  }
 }
 
 // change tab disguise
@@ -638,7 +1037,7 @@ function changeDisguise(type) {
   const disguises = {
     default: {
       title: "cosmic.",
-      icon: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwMDAwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTcgNkMzLjY5IDYgMSA4LjY5IDEgMTJTMy42OSAxOCA3IDE4SDE3QzIwLjMxIDE4IDIzIDE1LjMxIDIzIDEyUzIwLjMxIDYgMTcgNkg3Wk03IDhIMTdDMTkuMjEgOCAyMSA5Ljc5IDIxIDEyUzE5LjIxIDE2IDE3IDE2SDdDNC43OSAxNiAzIDE0LjIxIDMgMTJTNC43OSA4IDcgOFpNOSAxMEM4LjQ1IDEwIDggMTAuNDUgOCAxMVM4LjQ1IDEyIDkgMTJTMTAgMTEuNTUgMTAgMTFTOS41NSAxMCA5IDEwWk0xNSAxMEMxNC40NSAxMCAxNCAxMC40NSAxNCAxMVMxNC40NSAxMiAxNSAxMlMxNiAxMS41NSAxNiAxMVMxNS41NSAxMCAxNSAxMFpNNyAxNEM2LjQ1IDE0IDYgMTQuNDUgNiAxNVM2LjQ1IDE2IDcgMTZTOCAxNS41NSA4IDE1UzcuNTUgMTQgNyAxNFpNMTcgMTRDMTYuNDUgMTQgMTYgMTQuNDUgMTYgMTVTMTYuNDUgMTYgMTcgMTZTMTggMTUuNTUgMTggMTVTMTcuNTUgMTQgMTcgMTRaIiBmaWxsPSIjZWM0ODk5Ii8+Cjwvc3ZnPgo=",
+      icon: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwMDAwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNyA2QzMuNjkgNiAxIDEuNjkgMSAxMlMxIDE5LjMxIDMuNjkgMjEgNyAyMVMxMC4zMSAyMSAxMjIgMTkuMVMxMjIgMTJTMTEuMzEgMyA3IDNTNyA2eiIvPjwvc3ZnPg==",
     },
     google: { title: "Google", icon: "https://www.google.com/favicon.ico" },
     drive: {
@@ -649,6 +1048,11 @@ function changeDisguise(type) {
     classroom: { title: "Classes", icon: "https://ssl.gstatic.com/classroom/favicon.png" },
     docs: { title: "Google Docs", icon: "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico" },
     canvas: { title: "Dashboard", icon: "https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico" },
+    zoom: { title: "Zoom", icon: "https://st1.zoom.us/zoom.ico" },
+    teams: {
+      title: "Microsoft Teams",
+      icon: "https://res.cdn.office.net/teams/1.3.00.4461/images/favicons/favicon-96x96.png",
+    },
   }
 
   const disguise = disguises[type]
@@ -674,13 +1078,16 @@ function changeBackground(type) {
   mountainBackground.classList.remove("show")
 
   switch (type) {
-    case "stars":
-      starsContainer.style.display = "block"
-      break
     case "mountains":
       mountainBackground.classList.add("show")
       break
+    case "stars":
+      starsContainer.style.display = "block"
+      break
     case "particles":
+      starsContainer.style.display = "block"
+      break
+    case "aurora":
       starsContainer.style.display = "block"
       break
     case "none":
@@ -690,12 +1097,27 @@ function changeBackground(type) {
 
 // change animation speed
 function changeAnimationSpeed(speed) {
-  document.body.className = document.body.className.replace(/\b(slow|fast)-animation\b/g, "")
+  document.body.className = document.body.className.replace(/\b(slow|fast|ultra)-animation\b/g, "")
 
   if (speed === "slow") {
     document.body.classList.add("slow-animation")
   } else if (speed === "fast") {
     document.body.classList.add("fast-animation")
+  } else if (speed === "ultra") {
+    document.body.classList.add("ultra-animation")
+  }
+}
+
+// change font
+function changeFont(font) {
+  document.body.className = document.body.className.replace(/\b(orbitron|comfortaa|mono)-font\b/g, "")
+
+  if (font === "orbitron") {
+    document.body.classList.add("orbitron-font")
+  } else if (font === "comfortaa") {
+    document.body.classList.add("comfortaa-font")
+  } else if (font === "mono") {
+    document.body.classList.add("mono-font")
   }
 }
 
@@ -721,6 +1143,9 @@ function handlePanicKey(event) {
     case "ctrl+shift+x":
       shouldPanic = event.ctrlKey && event.shiftKey && event.key === "X"
       break
+    case "alt+tab":
+      shouldPanic = event.altKey && event.key === "Tab"
+      break
   }
 
   if (shouldPanic) {
@@ -739,10 +1164,10 @@ function exportSettings() {
   const settings = {
     theme: localStorage.getItem("cosmic_theme") || "cosmic",
     disguise: localStorage.getItem("cosmic_disguise") || "default",
-    background: localStorage.getItem("cosmic_background") || "stars",
+    background: localStorage.getItem("cosmic_background") || "mountainBackground",
     animationSpeed: localStorage.getItem("cosmic_animation_speed") || "normal",
     panicKey: localStorage.getItem("cosmic_panic_key") || "none",
-    favorites: JSON.parse(localStorage.getItem("cosmic_favorites")) || [],
+    font: localStorage.getItem("cosmic_font") || "default",
   }
 
   const dataStr = JSON.stringify(settings, null, 2)
@@ -802,10 +1227,10 @@ function importSettings() {
             setupPanicKey()
           }
 
-          if (settings.favorites) {
-            localStorage.setItem("cosmic_favorites", JSON.stringify(settings.favorites))
-            favorites = settings.favorites
-            renderGamesList()
+          if (settings.font) {
+            localStorage.setItem("cosmic_font", settings.font)
+            document.getElementById("fontSelect").value = settings.font
+            changeFont(settings.font)
           }
 
           alert("Settings imported successfully!")
@@ -840,6 +1265,16 @@ function openInAboutBlank() {
   `)
 }
 
+// clear cache
+function clearCache() {
+  if (confirm("Are you sure you want to clear the cache? This will remove all stored data.")) {
+    localStorage.clear()
+    sessionStorage.clear()
+    alert("Cache cleared successfully!")
+    location.reload()
+  }
+}
+
 // reset settings
 function resetSettings() {
   if (confirm("Are you sure you want to reset all settings? This cannot be undone.")) {
@@ -848,9 +1283,8 @@ function resetSettings() {
     localStorage.removeItem("cosmic_background")
     localStorage.removeItem("cosmic_animation_speed")
     localStorage.removeItem("cosmic_panic_key")
-    localStorage.removeItem("cosmic_favorites")
+    localStorage.removeItem("cosmic_font")
 
-    favorites = []
     currentGame = null
     panicKey = "none"
 
@@ -859,25 +1293,14 @@ function resetSettings() {
     document.getElementById("backgroundSelect").value = "stars"
     document.getElementById("animationSpeed").value = "normal"
     document.getElementById("panicKeySelect").value = "none"
+    document.getElementById("fontSelect").value = "default"
 
     changeDisguise("default")
     changeTheme("cosmic")
     changeBackground("stars")
     changeAnimationSpeed("normal")
+    changeFont("default")
     setupPanicKey()
-    renderGamesList()
-
-    document.getElementById("currentGameTitle").textContent = "Select a game to play"
-    document.getElementById("gameContainer").innerHTML = `
-      <div class="no-game-selected">
-        <i class="ri-gamepad-line"></i>
-        <h3>Choose a game from the list</h3>
-        <p>Click on any game from the sidebar to start playing</p>
-      </div>
-    `
-    document.getElementById("newTabBtn").disabled = true
-    document.getElementById("aboutBlankBtn").disabled = true
-    document.getElementById("fullscreenBtn").disabled = true
 
     alert("Settings reset successfully!")
   }
