@@ -1037,7 +1037,7 @@ function changeDisguise(type) {
   const disguises = {
     default: {
       title: "cosmic.",
-      icon: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwMDAwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNyA2QzMuNjkgNiAxIDEuNjkgMSAxMlMxIDE5LjMxIDMuNjkgMjEgNyAyMVMxMC4zMSAyMSAxMjIgMTkuMVMxMjIgMTJTMTEuMzEgMyA3IDNTNyA2eiIvPjwvc3ZnPg==",
+      icon: "https://cdn1.iconfinder.com/data/icons/miscellaneous-colorful/48/saturn-512.png",
     },
     google: { title: "Google", icon: "https://www.google.com/favicon.ico" },
     drive: {
@@ -1051,7 +1051,7 @@ function changeDisguise(type) {
     zoom: { title: "Zoom", icon: "https://st1.zoom.us/zoom.ico" },
     teams: {
       title: "Microsoft Teams",
-      icon: "https://res.cdn.office.net/teams/1.3.00.4461/images/favicons/favicon-96x96.png",
+      icon: "hhttps://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Microsoft_Office_Teams_%282018%E2%80%93present%29.svg/250px-Microsoft_Office_Teams_%282018%E2%80%93present%29.svg.png",
     },
   }
 
