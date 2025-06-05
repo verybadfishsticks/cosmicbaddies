@@ -526,14 +526,14 @@ async function sendMessageToGroq(message) {
           {
             role: "system",
             content:
-              "You are a helpful AI assistant for a gaming website called 'cosmic.' You help users with games, website features, and general questions. Keep responses concise and friendly.",
+              "You are a helpful AI assistant for an unblocked gaming website called 'cosmic.'. cosmic. Was made with the purpose of bypassing school and work restrictions and promoting student freedom. You help users with games, website features, and general questions. Keep responses concise and friendly.",
           },
           {
             role: "user",
             content: message,
           },
         ],
-        max_tokens: 150,
+        max_tokens: 999,
         temperature: 0.7,
       }),
     })
