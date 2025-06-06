@@ -1,23 +1,12 @@
 /* ========================================
-   COSMIC GAMING WEBSITE - MAIN STYLESHEET
+   COSMIC GAMING WEBSITE - ENHANCED STYLESHEET
    ========================================
    
-   This stylesheet contains all the visual styling for the cosmic gaming website.
-   It includes multiple themes, responsive design, animations, and modern UI components.
-   
-   Structure:
-   1. CSS Custom Properties (Theme Variables)
-   2. Global Styles & Typography
-   3. Background Effects (Stars & Mountains)
-   4. Navigation & Header
-   5. Hero Section
-   6. Games Layout & Components (Square Layout)
-   7. Tools Section (ExtPrint3r & AI Chat)
-   8. Bookmarklets Section
-   9. Settings Section
-   10. Footer
-   11. Mobile Responsive Styles
-   12. Animations & Effects
+   This enhanced stylesheet includes all previous styles plus:
+   - Removed mountain SVG silhouettes
+   - New beautiful background images for themes
+   - Additional settings styling
+   - Enhanced responsive design
    ======================================== */
 
 /* ========================================
@@ -177,6 +166,66 @@
   --theme-secondary: #ba55d3; /* Medium orchid secondary */
 }
 
+/* Neon City Theme */
+[data-theme="neon"] {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: rgba(20, 20, 20, 0.9);
+  --text-primary: #00ffff;
+  --text-secondary: #ff00ff;
+  --text-muted: #ffff00;
+  --theme-primary: #00ffff;
+  --theme-secondary: #ff00ff;
+  --theme-accent: #ffff00;
+}
+
+/* Retro Wave Theme */
+[data-theme="retro"] {
+  --bg-primary: #2d1b69;
+  --bg-secondary: rgba(45, 27, 105, 0.8);
+  --text-primary: #ff6ec7;
+  --text-secondary: #00d4ff;
+  --text-muted: #ffd700;
+  --theme-primary: #ff6ec7;
+  --theme-secondary: #00d4ff;
+  --theme-accent: #ffd700;
+}
+
+/* Volcanic Landscape Theme */
+[data-theme="volcano"] {
+  --bg-primary: #1a0a0a;
+  --bg-secondary: rgba(139, 0, 0, 0.8);
+  --text-primary: #ffdddd;
+  --text-secondary: #ffaaaa;
+  --text-muted: #ff6666;
+  --theme-primary: #ff4500;
+  --theme-secondary: #dc143c;
+  --theme-accent: #b22222;
+}
+
+/* Arctic Tundra Theme */
+[data-theme="arctic"] {
+  --bg-primary: #f0f8ff;
+  --bg-secondary: rgba(176, 224, 230, 0.8);
+  --text-primary: #2f4f4f;
+  --text-secondary: #708090;
+  --text-muted: #778899;
+  --theme-primary: #4682b4;
+  --theme-secondary: #87ceeb;
+  --theme-accent: #5f9ea0;
+}
+
+/* Tropical Paradise Theme */
+[data-theme="tropical"] {
+  --bg-primary: #006400;
+  --bg-secondary: rgba(0, 128, 0, 0.8);
+  --text-primary: #f0fff0;
+  --text-secondary: #98fb98;
+  --text-muted: #90ee90;
+  --theme-primary: #32cd32;
+  --theme-secondary: #00fa9a;
+  --theme-accent: #00ff7f;
+}
+
 /* ========================================
    2. GLOBAL STYLES & TYPOGRAPHY
    ========================================
@@ -233,7 +282,7 @@ h6 {
    and visual interest without interfering with content.
    ======================================== */
 
-/* Mountain Background - Beautiful mountain landscape image */
+/* Mountain Background - Beautiful mountain landscape image (SVG silhouette removed) */
 .mountain-background {
   position: fixed; /* Stay in place during scrolling */
   top: 0;
@@ -519,101 +568,132 @@ h6 {
 }
 
 /* ========================================
-   5. PAGE SECTIONS & HERO
-   ========================================
-   
-   Layout and styling for main page sections,
-   including the hero section with animated text.
+   5. HERO SECTION (STATS REMOVED)
    ======================================== */
 
-/* Base styling for all page sections */
 .page-section {
-  min-height: 100vh; /* Full viewport height minimum */
+  min-height: 100vh;
   position: relative;
-  z-index: 10; /* Above background effects */
+  z-index: 10;
 }
 
-/* Hidden sections */
 .page-section.hidden {
   display: none;
 }
 
-/* Hero Section - Main landing area */
 .hero {
   display: flex;
-  align-items: center; /* Center vertically */
-  justify-content: center; /* Center horizontally */
-  min-height: 100vh; /* Full viewport height */
-  padding-top: 4rem; /* Account for fixed navbar */
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding-top: 4rem;
   text-align: center;
 }
 
-/* Hero content container */
 .hero-content {
-  max-width: 800px; /* Limit width for readability */
-  padding: 0 1rem; /* Side padding */
+  max-width: 800px;
+  padding: 0 1rem;
 }
 
-/* Main hero title with gradient text effect */
 .hero-title {
-  font-size: clamp(3rem, 8vw, 5rem); /* Responsive font size */
-  font-weight: 800; /* Extra bold */
-  margin-bottom: 0.001rem; /* Minimal bottom margin */
-  font-family: "Space Grotesk", sans-serif; /* Modern font */
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: 800;
+  margin-bottom: 0.001rem;
+  font-family: "Space Grotesk", sans-serif;
   background: linear-gradient(to right, var(--theme-primary), var(--theme-secondary), var(--theme-accent));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 30px rgba(168, 85, 247, 0.3); /* Subtle glow */
+  text-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
 }
 
-/* Hero subtitle with typing animation */
 .hero-subtitle {
   font-size: 1.25rem;
   color: var(--text-secondary);
-  margin-bottom: 0.5rem;
-  min-height: 1.5rem; /* Prevent layout shift during typing */
+  margin-bottom: 2rem;
+  min-height: 1.5rem;
 }
 
-/* Typing cursor animation */
 .typing-cursor::after {
-  content: "|"; /* Cursor character */
-  animation: blink 1s infinite; /* Blinking animation */
+  content: "|";
+  animation: blink 1s infinite;
   color: var(--theme-primary);
 }
 
-/* Cursor blinking keyframes */
 @keyframes blink {
   0%,
   50% {
-    opacity: 1; /* Visible */
+    opacity: 1;
   }
   51%,
   100% {
-    opacity: 0; /* Hidden */
+    opacity: 0;
   }
 }
 
+/* Hero Actions */
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.hero-btn {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.hero-btn.primary {
+  background: linear-gradient(135deg, var(--theme-primary), var(--theme-secondary));
+  color: white;
+  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+}
+
+.hero-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4);
+}
+
+.hero-btn.secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.hero-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
 /* ========================================
-   6. GAMES LAYOUT & COMPONENTS (SQUARE LAYOUT)
-   ========================================
-   
-   Improved square grid layout for games with better hover effects
-   and overlay text functionality.
+   6. GAMES SECTION WITH FAVORITES
    ======================================== */
 
-.games-container {
+.games-container,
+.favorites-container {
   padding: 6rem 2rem 2rem;
   max-width: 1400px;
   margin: 0 auto;
 }
 
-.games-header {
+.games-header,
+.favorites-header {
   text-align: center;
   margin-bottom: 3rem;
 }
 
-/* Games Search Container */
+/* Games Search */
 .games-search-container {
   position: relative;
   max-width: 500px;
@@ -703,8 +783,9 @@ h6 {
   box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
 }
 
-/* Improved Square Games Grid Layout */
-.game-grid {
+/* Game Grid */
+.game-grid,
+.favorites-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 2rem;
@@ -792,23 +873,70 @@ h6 {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
-.loading-games {
-  grid-column: 1 / -1;
+/* Favorite Button */
+.favorite-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.favorite-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: scale(1.1);
+}
+
+.favorite-btn.favorited {
+  color: #ffd700;
+}
+
+.favorite-btn i {
+  font-size: 1.2rem;
+}
+
+/* No Favorites State */
+.no-favorites {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 4rem;
+  text-align: center;
   color: var(--text-muted);
 }
 
-.loading-spinner {
-  font-size: 3rem;
+.no-favorites i {
+  font-size: 4rem;
   margin-bottom: 1.5rem;
-  animation: spin 1s linear infinite;
   color: var(--theme-primary);
 }
 
+.no-favorites h3 {
+  font-size: 1.75rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.no-favorites p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  opacity: 0.8;
+}
+
+/* Loading and Error States */
+.loading-games,
 .no-games-found {
   grid-column: 1 / -1;
   display: flex;
@@ -818,6 +946,13 @@ h6 {
   padding: 4rem;
   color: var(--text-muted);
   text-align: center;
+}
+
+.loading-spinner {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  animation: spin 1s linear infinite;
+  color: var(--theme-primary);
 }
 
 .no-games-found i {
@@ -846,7 +981,7 @@ h6 {
   }
 }
 
-/* Section title styling */
+/* Section Titles */
 .section-title {
   font-size: 3rem;
   font-weight: 800;
@@ -871,86 +1006,8 @@ h6 {
   line-height: 1.6;
 }
 
-/* Responsive adjustments */
-@media (max-width: 1200px) {
-  .game-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .game-button {
-    width: 160px;
-    height: 160px;
-  }
-}
-
-@media (max-width: 768px) {
-  .game-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 1rem;
-    padding: 1rem 0;
-  }
-
-  .game-button {
-    width: 140px;
-    height: 140px;
-  }
-
-  .overlay-text {
-    font-size: 14px;
-    padding: 0.75rem 0.5rem;
-  }
-
-  .games-container {
-    padding: 5rem 1rem 1rem;
-  }
-
-  .section-title {
-    font-size: 2.5rem;
-  }
-
-  .section-subtitle {
-    font-size: 1rem;
-  }
-
-  .games-search-input {
-    padding: 0.75rem 2.5rem 0.75rem 0.75rem;
-    font-size: 0.9rem;
-  }
-
-  .search-icon {
-    right: 0.75rem;
-    font-size: 1rem;
-  }
-
-  .filter-btn {
-    padding: 0.5rem 1rem;
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .game-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  }
-
-  .game-button {
-    width: 120px;
-    height: 120px;
-  }
-
-  .overlay-text {
-    font-size: 12px;
-    padding: 0.5rem 0.25rem;
-  }
-}
-
 /* ========================================
-   TOOLS SECTION
-   ========================================
-   
-   Contains ExtPrint3r iframe and AI chatbot tools with
-   interactive interfaces and modern styling.
+   7. TOOLS SECTION WITH NEW TOOLS
    ======================================== */
 
 .tools-section {
@@ -1008,7 +1065,329 @@ h6 {
   margin-bottom: 1.5rem;
 }
 
-/* ExtPrint3r Tool Styles */
+/* Calculator Tool */
+.calculator-container {
+  background: var(--bg-primary);
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.calculator-display {
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.calculator-display input {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.5rem;
+  text-align: right;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: "Courier New", monospace;
+}
+
+.calculator-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border-color);
+}
+
+.calc-btn {
+  padding: 1.25rem;
+  font-size: 1.25rem;
+  border: none;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.calc-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.calc-btn.operator {
+  background: rgba(168, 85, 247, 0.2);
+  color: var(--theme-primary);
+}
+
+.calc-btn.equals {
+  background: var(--theme-primary);
+  color: white;
+  grid-row: span 2;
+}
+
+.calc-btn.clear {
+  background: var(--theme-accent);
+  color: white;
+}
+
+.calc-btn.zero {
+  grid-column: span 2;
+}
+
+/* Timer Tool */
+.timer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.timer-display {
+  font-size: 3rem;
+  font-family: "Courier New", monospace;
+  color: var(--text-primary);
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  min-width: 300px;
+  text-align: center;
+}
+
+.timer-inputs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.timer-inputs input {
+  width: 80px;
+  padding: 0.75rem;
+  text-align: center;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.timer-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.timer-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.timer-btn.start {
+  background: var(--theme-primary);
+  color: white;
+}
+
+.timer-btn.pause {
+  background: var(--theme-secondary);
+  color: white;
+}
+
+.timer-btn.reset {
+  background: var(--theme-accent);
+  color: white;
+}
+
+/* Ruffle Emulator Tool */
+.ruffle-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ruffle-input-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.ruffle-input {
+  flex: 1;
+  padding: 0.75rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.ruffle-btn {
+  padding: 0.75rem 1.5rem;
+  background: var(--theme-primary);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ruffle-frame-container {
+  height: 400px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ruffle-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: var(--text-muted);
+}
+
+.ruffle-placeholder i {
+  font-size: 3rem;
+}
+
+/* Dictionary Tool */
+.dictionary-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dictionary-input-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.dictionary-input {
+  flex: 1;
+  padding: 0.75rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.dictionary-btn {
+  padding: 0.75rem 1.5rem;
+  background: var(--theme-primary);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dictionary-results {
+  height: 300px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.dictionary-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 1rem;
+  color: var(--text-muted);
+}
+
+.dictionary-placeholder i {
+  font-size: 3rem;
+}
+
+.dictionary-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 1rem;
+  color: var(--text-muted);
+}
+
+.dictionary-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 0.5rem;
+  color: var(--theme-accent);
+  text-align: center;
+}
+
+.dictionary-error i {
+  font-size: 2rem;
+}
+
+.dictionary-result {
+  padding: 0.5rem;
+}
+
+.word-header {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.5rem;
+}
+
+.word-title {
+  font-size: 1.75rem;
+  margin-bottom: 0.25rem;
+  color: var(--text-primary);
+}
+
+.word-phonetic {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.definition-section {
+  margin-bottom: 1.5rem;
+}
+
+.part-of-speech {
+  color: var(--theme-primary);
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.definitions-list {
+  padding-left: 1.5rem;
+}
+
+.definition-item {
+  margin-bottom: 0.75rem;
+}
+
+.definition-text {
+  margin-bottom: 0.25rem;
+}
+
+.definition-example {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* ExtPrint3r Tool */
 .extprint-container {
   height: 500px;
   border-radius: 0.5rem;
@@ -1024,7 +1403,7 @@ h6 {
   border-radius: 0.5rem;
 }
 
-/* AI Chatbot Tool Styles */
+/* AI Chatbot Tool */
 .chatbot-container {
   display: flex;
   flex-direction: column;
@@ -1156,11 +1535,7 @@ h6 {
 }
 
 /* ========================================
-   BOOKMARKLETS SECTION
-   ========================================
-   
-   Grid layout for browser bookmarklets with
-   drag-and-drop functionality.
+   8. BOOKMARKLETS SECTION
    ======================================== */
 
 .bookmarklets-section {
@@ -1223,11 +1598,7 @@ h6 {
 }
 
 /* ========================================
-   SETTINGS SECTION
-   ========================================
-   
-   Form controls and settings groups with
-   consistent styling and smooth interactions.
+   9. SETTINGS SECTION
    ======================================== */
 
 .settings-section {
@@ -1313,11 +1684,185 @@ h6 {
 }
 
 /* ========================================
-   FOOTER
-   ========================================
-   
-   Site footer with links, information, and
-   responsive grid layout.
+   10. MODAL SYSTEM
+   ======================================== */
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.modal.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content.large {
+  max-width: 800px;
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: "Orbitron", sans-serif;
+  background: linear-gradient(to right, var(--theme-primary), var(--theme-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+.modal-body {
+  padding: 1.5rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  padding: 1.5rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.modal-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-btn.primary {
+  background: linear-gradient(to right, var(--theme-primary), var(--theme-secondary));
+  color: white;
+  border: none;
+}
+
+.modal-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+}
+
+.modal-btn.secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.modal-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--theme-primary);
+  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.2);
+}
+
+/* Privacy and Terms Content */
+.privacy-content,
+.terms-content {
+  color: var(--text-secondary);
+}
+
+.privacy-content h4,
+.terms-content h4 {
+  color: var(--text-primary);
+  margin: 1.5rem 0 0.75rem;
+  font-size: 1.25rem;
+}
+
+.privacy-content p,
+.terms-content p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.privacy-content ul,
+.terms-content ul {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.privacy-content li,
+.terms-content li {
+  margin-bottom: 0.5rem;
+}
+
+/* ========================================
+   11. FOOTER
    ======================================== */
 
 .footer {
@@ -1387,11 +1932,7 @@ h6 {
 }
 
 /* ========================================
-   MOBILE RESPONSIVE STYLES
-   ========================================
-   
-   Responsive design adjustments for mobile devices
-   and smaller screens.
+   12. MOBILE RESPONSIVE STYLES
    ======================================== */
 
 .mobile-menu {
@@ -1429,12 +1970,165 @@ h6 {
   color: var(--text-primary);
 }
 
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 0 1rem;
+  }
+
+  .logo-text {
+    font-size: 1.25rem;
+  }
+
+  .nav-center {
+    display: none;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .tools-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .calculator-buttons {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .calc-btn {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  .timer-display {
+    font-size: 2.5rem;
+    min-width: auto;
+    width: 100%;
+  }
+
+  .timer-inputs {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .timer-inputs input {
+    width: 30%;
+  }
+
+  .timer-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .timer-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .dictionary-input-group,
+  .ruffle-input-group {
+    flex-direction: column;
+  }
+
+  .dictionary-btn,
+  .ruffle-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .modal-content {
+    width: 95%;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 2.25rem;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+  }
+
+  .hero-title {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .game-grid,
+  .favorites-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+  }
+
+  .game-button {
+    width: 140px;
+    height: 140px;
+  }
+
+  .overlay-text {
+    font-size: 14px;
+    padding: 0.5rem;
+  }
+
+  .calculator-display input {
+    font-size: 1.25rem;
+  }
+
+  .calc-btn {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .timer-display {
+    font-size: 2rem;
+    padding: 0.75rem 1.5rem;
+  }
+
+  .setting-button {
+    width: 100%;
+    margin-right: 0;
+    justify-content: center;
+  }
+
+  .modal-header h3 {
+    font-size: 1.25rem;
+  }
+
+  .modal-body {
+    padding: 1rem;
+  }
+
+  .modal-footer {
+    padding: 1rem;
+    flex-direction: column;
+  }
+
+  .modal-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
 /* ========================================
-   ANIMATIONS & EFFECTS
-   ========================================
-   
-   Keyframe animations, transitions, and special
-   effects for enhanced user experience.
+   13. ANIMATIONS & EFFECTS
    ======================================== */
 
 .fade-in {
@@ -1478,47 +2172,14 @@ h6 {
   transition-duration: 0.1s !important;
 }
 
-/* Mobile responsive adjustments */
-@media (max-width: 768px) {
-  .tools-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .discord-button {
-    bottom: 1rem;
-    right: 1rem;
-    width: 50px;
-    height: 50px;
-  }
-
-  .discord-button i {
-    font-size: 1.25rem;
-  }
-
-  .footer-content {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-
-  .extprint-container {
-    height: 400px;
-  }
-
-  .chatbot-container {
-    height: 350px;
-  }
-
-  .games-search-container {
-    margin: 1.5rem auto;
-  }
-
-  .games-search-input {
-    padding: 0.75rem 2.5rem 0.75rem 0.75rem;
-    font-size: 0.9rem;
-  }
-
-  .search-icon {
-    right: 0.75rem;
-    font-size: 1rem;
-  }
+/* Dynamic backgrounds for ocean, islands, and clouds */
+.ocean-background,
+.islands-background,
+.clouds-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
 }
