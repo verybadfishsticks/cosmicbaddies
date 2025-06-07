@@ -60,7 +60,7 @@ const customGames = [
   },
   {
     id: "ninjavsevilcorp",
-    title: "Ninja VS EvilCorp",
+    title: "Ninja vs EVILCORP",
     icon: "https://cyberschool-lol.w3spaces.com/img/ninjavsevilcorp.png",
     url: "https://cyberschool-lol.w3spaces.com/g/ninjavsevilcorp.html",
     category: "action",
@@ -83,11 +83,11 @@ const customGames = [
     isCustom: true,
   },
   {
-    id: "emojilegends",
-    title: "Emoji Legends",
-    icon: "https://cyberschool-lol.w3spaces.com/img/emojilegends.png",
-    url: "https://cyberschool-lol.w3spaces.com/g/emojilegends.html",
-    category: "action",
+    id: "ynclicker",
+    title: "YN Clicker",
+    icon: "https://img.freepik.com/free-photo/dark-style-ninja-naruto_23-2151140101.jpg?semt=ais_hybrid&w=740",
+    url: "https://ynclicker.w3spaces.com",
+    category: "strategy",
     isCustom: true,
   },
   {
@@ -106,8 +106,92 @@ const customGames = [
     category: "action",
     isCustom: true,
   },
-  // Add more games here as needed
+  {
+    id: "edgenotfound",
+    title: "Edge Not Found",
+    icon: "https://cyberschool-lol.w3spaces.com/img/edgenotfound.png",
+    url: "https://cyberschool-lol.w3spaces.com/g/edgenotfound.html",
+    category: "puzzle",
+    isCustom: true,
+  },
+  {
+    id: "flappy20482",
+    title: "Flappy 2048 2",
+    icon: "https://cyberschool-lol.w3spaces.com/img/2048.png",
+    url: "https://cyberschool-lol.w3spaces.com/g/flappy2048.html",
+    category: "strategy",
+    isCustom: true,
+  },
+  {
+    id: "raftwars",
+    title: "Raft Wars",
+    icon: "https://cyberschool-lol.w3spaces.com/img/raftwars.png",
+    url: "https://cyberschool-lol.w3spaces.com/g/raftwars.html",
+    category: "strategy",
+    isCustom: true,
+  },
+  {
+    id: "raftwars2",
+    title: "Raft Wars 2",
+    icon: "https://cyberschool-lol.w3spaces.com/img/raftwars2.png",
+    url: "https://cyberschool-lol.w3spaces.com/g/raftwars2.html",
+    category: "strategy",
+    isCustom: true,
+  },
+  {
+    id: "classicsnake",
+    title: "Classic Snake",
+    icon: "https://cyberschool-lol.w3spaces.com/img/snake.jpg",
+    url: "https://cyberschool-lol.w3spaces.com/g/classicsnake.html",
+    category: "arcade",
+    isCustom: true,
+  },
+  {
+    id: "fluidsimulator",
+    title: "Fluid Simulator",
+    icon: "https://cyberschool-lol.w3spaces.com/img/fluidsimulator.png",
+    url: "https://cyberschool-lol.w3spaces.com/g/fluidsimulator.html",
+    category: "arcade",
+    isCustom: true,
+  },
 ]
+
+// Media content array
+const mediaContent = [
+  {
+    id: "cosmic_trailer",
+    title: "Cosmic Gaming Trailer",
+    type: "video",
+    url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    thumbnail: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=300&fit=crop",
+    description: "official cosmic gaming platform trailer",
+  },
+  {
+    id: "gaming_setup",
+    title: "Ultimate Gaming Setup",
+    type: "image",
+    url: "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=800&h=600&fit=crop",
+    thumbnail: "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=400&h=300&fit=crop",
+    description: "epic gaming setup inspiration",
+  },
+  {
+    id: "retro_games",
+    title: "Retro Gaming History",
+    type: "video",
+    url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    thumbnail: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=300&fit=crop",
+    description: "journey through retro gaming history",
+  },
+  {
+    id: "cosmic_wallpaper",
+    title: "Cosmic Space Wallpaper",
+    type: "image",
+    url: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=1920&h=1080&fit=crop",
+    thumbnail: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=400&h=300&fit=crop",
+    description: "beautiful cosmic space wallpaper",
+  },
+]
+
 let filteredGames = []
 const favorites = JSON.parse(localStorage.getItem("cosmic_favorites")) || []
 let gameHistory = JSON.parse(localStorage.getItem("cosmic_game_history")) || []
@@ -117,6 +201,7 @@ let isDeleting = false
 let typingSpeed = 65
 let currentGame = null
 let panicKey = localStorage.getItem("cosmic_panic_key") || "none"
+let dictionaryMode = "dictionary"
 
 // Timer variables
 let timerInterval = null
@@ -133,47 +218,70 @@ const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 // typing animation phrases
 const typingPhrases = [
   "your ultimate destination for unblocked gaming.",
-  "endless entertainment at your fingertips.",
+  "endless entertainment at your very own fingertips.",
   "where school restrictions are nonexistent.",
   "play without limits, anytime, anywhere - no restrictions.",
   "the digital repository of gaming and entertainment.",
-  "discover, play, and enjoy thousands of games.",
+  "discover, play, and enjoy hundreds of unblocked games.",
   "your gateway to unlimited gaming freedom.",
 ]
 
 // bookmarklets data
 const bookmarklets = [
   {
-    title: "Unblocker",
-    description: "Bypass website restrictions and access blocked content.",
-    code: `javascript:(function(){var url=prompt('Enter URL to unblock:');if(url){window.open('https://www.croxyproxy.com/'+encodeURIComponent(url),'_blank');}})();`,
+    title: "unblocker",
+    description: "bypass website restrictions and access blocked content.",
+    code: `javascript:(function(){var url=prompt('enter url to unblock:');if(url){window.open('https://www.croxyproxy.com/'+encodeURIComponent(url),'_blank');}})();`,
   },
   {
-    title: "Tab Cloak",
-    description: "Disguise your current tab as Google.",
-    code: `javascript:(function(){document.title='Google';var link=document.querySelector("link[rel*='icon']")||document.createElement('link');link.type='image/x-icon';link.rel='shortcut icon';link.href='https://www.google.com/favicon.ico';document.getElementsByTagName('head')[0].appendChild(link);})();`,
+    title: "tab cloak",
+    description: "disguise your current tab as google.",
+    code: `javascript:(function(){document.title='google';var link=document.querySelector("link[rel*='icon']")||document.createElement('link');link.type='image/x-icon';link.rel='shortcut icon';link.href='https://www.google.com/favicon.ico';document.getElementsByTagName('head')[0].appendChild(link);})();`,
   },
   {
-    title: "History Flooder",
-    description: "Flood browser history to hide your tracks.",
-    code: `javascript:(function(){var sites=['https://www.google.com','https://www.youtube.com','https://www.wikipedia.org','https://www.github.com','https://www.stackoverflow.com'];for(var i=0;i<50;i++){history.pushState({},'',sites[Math.floor(Math.random()*sites.length)]);}alert('History flooded!');})();`,
+    title: "history flooder",
+    description: "flood browser history to hide your tracks.",
+    code: `javascript:(function(){var sites=['https://www.google.com','https://www.youtube.com','https://www.wikipedia.org','https://www.github.com','https://www.stackoverflow.com'];for(var i=0;i<50;i++){history.pushState({},'',sites[Math.floor(Math.random()*sites.length)]);}alert('history flooded!');})();`,
   },
   {
-    title: "Panic Button",
-    description: "Quickly redirect to Google when you need to hide.",
+    title: "panic button",
+    description: "quickly redirect to google when you need to hide.",
     code: `javascript:(function(){window.location.href='https://www.google.com';})();`,
   },
   {
-    title: "Inspect Element",
-    description: "Enable inspect element on restricted sites.",
+    title: "inspect element",
+    description: "enable inspect element on restricted sites.",
     code: `javascript:(function(){var script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/ianramzy/decancer@main/index.js';document.head.appendChild(script);})();`,
   },
   {
-    title: "Auto Clicker",
-    description: "Automatic clicking tool for games and websites.",
-    code: `javascript:(function(){var clicking=false;var interval;function toggleClicker(){if(clicking){clearInterval(interval);clicking=false;alert('Auto clicker stopped');}else{interval=setInterval(function(){document.elementFromPoint(event.clientX,event.clientY).click();},100);clicking=true;alert('Auto clicker started - move mouse to target');}}document.addEventListener('keydown',function(e){if(e.key==='c'&&e.ctrlKey&&e.shiftKey){e.preventDefault();toggleClicker();}});alert('Press Ctrl+Shift+C to toggle auto clicker');})();`,
+    title: "auto clicker",
+    description: "automatic clicking tool for games and websites.",
+    code: `javascript:(function(){var clicking=false;var interval;function toggleClicker(){if(clicking){clearInterval(interval);clicking=false;alert('auto clicker stopped');}else{interval=setInterval(function(){document.elementFromPoint(event.clientX,event.clientY).click();},100);clicking=true;alert('auto clicker started - move mouse to target');}}document.addEventListener('keydown',function(e){if(e.key==='c'&&e.ctrlKey&&e.shiftKey){e.preventDefault();toggleClicker();}});alert('press ctrl+shift+c to toggle auto clicker');})();`,
   },
 ]
+
+// Wallpaper URLs
+const wallpapers = {
+  mountains: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop",
+  space: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=1920&h=1080&fit=crop",
+  forest: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&h=1080&fit=crop",
+  ocean: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1920&h=1080&fit=crop",
+  desert: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1920&h=1080&fit=crop",
+  city: "https://external-preview.redd.it/XCTVIhr4EElXe3kgRt3cKiNlfHpS5xEUqEChHRoSjTI.jpg?auto=webp&s=fef5917af72b33d71eab15521dec8b6a89f53f07",
+  aurora: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=1920&h=1080&fit=crop",
+  sunset: "https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3Vuc2V0JTIwd2FsbHBhcGVyfGVufDB8fDB8fHww",
+  galaxy: "https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=1920&h=1080&fit=crop",
+  volcano: "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=1920&h=1080&fit=crop",
+  arctic: "https://i.pinimg.com/736x/38/b3/f7/38b3f7fcaf1595b17aba600124d6336a.jpg",
+  tropical: "https://wallpapers.com/images/hd/cute-tropical-3ber1fipqhlyc3uf.jpg",
+  cyberpunk: "https://wallpapers.com/images/hd/cyberpunk-1920x1080-zyjxjel430ylg3kp.jpg",
+  retro: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1920&h=1080&fit=crop",
+  anime: "https://www.pixelstalk.net/wp-content/uploads/images6/3840x2160-Anime-Scenery-Wallpaper-HD.jpg",
+  fantasy: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcGPMSAqZki-Wl4uaVFCwCLCi3bJEP4m86Yg&s",
+  underwater: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1920&h=1080&fit=crop",
+  clouds: "https://w.wallhaven.cc/full/jx/wallhaven-jxl3qp.jpg",
+  stars: "https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=1920&h=1080&fit=crop",
+}
 
 // Load games from the API
 function loadGames() {
@@ -184,9 +292,6 @@ function loadGames() {
       tempDiv.innerHTML = data
 
       const links = tempDiv.querySelectorAll("a")
-      const gamesGrid = document.getElementById("games-grid")
-
-      gamesGrid.innerHTML = ""
       games = []
 
       links.forEach((link, index) => {
@@ -218,11 +323,13 @@ function loadGames() {
       // Render games
       filteredGames = [...games]
       renderGames()
+      renderFavorites()
+      updateGamesCount()
       setupGameFilters()
-      console.log(`Loaded ${games.length} games from API and custom games`)
+      console.log(`loaded ${games.length} games from api and custom games`)
     })
     .catch((error) => {
-      console.error("Error loading games:", error)
+      console.error("error loading games:", error)
       // Fallback games
       games = [
         {
@@ -273,8 +380,18 @@ function loadGames() {
 
       filteredGames = [...games]
       renderGames()
+      renderFavorites()
+      updateGamesCount()
       setupGameFilters()
     })
+}
+
+// Update games count
+function updateGamesCount() {
+  const gamesCount = document.getElementById("gamesCount")
+  if (gamesCount) {
+    gamesCount.textContent = ``
+  }
 }
 
 // Render games in square layout
@@ -286,8 +403,8 @@ function renderGames() {
     gamesGrid.innerHTML = `
       <div class="no-games-found">
         <i class="ri-search-line"></i>
-        <h3>No games found</h3>
-        <p>Try adjusting your search or filter criteria.</p>
+        <h3>no games found</h3>
+        <p>try adjusting your search or filter criteria.</p>
       </div>
     `
     return
@@ -329,6 +446,135 @@ function renderGames() {
 
     gamesGrid.appendChild(gameButton)
   })
+
+  updateGamesCount()
+}
+
+// Render favorites horizontally at top of games section
+function renderFavorites() {
+  const favoritesSection = document.getElementById("favoritesSection")
+  const favoritesHorizontal = document.getElementById("favoritesHorizontal")
+
+  if (favorites.length === 0) {
+    favoritesSection.style.display = "none"
+    return
+  }
+
+  favoritesSection.style.display = "block"
+  favoritesHorizontal.innerHTML = ""
+
+  const favoriteGames = games.filter((game) => favorites.includes(game.id))
+
+  favoriteGames.forEach((game, index) => {
+    const gameButton = document.createElement("div")
+    gameButton.className = "favorite-game-button"
+
+    gameButton.addEventListener("click", () => {
+      openGameInAboutBlank(game)
+    })
+
+    const gameImg = document.createElement("img")
+    gameImg.src = game.icon || "/placeholder.svg?height=120&width=120"
+    gameImg.alt = game.title
+    gameImg.loading = "lazy"
+
+    const gameTitle = document.createElement("div")
+    gameTitle.className = "favorite-game-title"
+    gameTitle.textContent = game.title
+
+    const favoriteBtn = document.createElement("button")
+    favoriteBtn.className = "favorite-btn favorited"
+    favoriteBtn.innerHTML = `<i class="ri-star-fill"></i>`
+    favoriteBtn.onclick = (e) => {
+      e.stopPropagation()
+      toggleFavorite(game.id)
+    }
+
+    gameButton.appendChild(gameImg)
+    gameButton.appendChild(gameTitle)
+    gameButton.appendChild(favoriteBtn)
+
+    gameButton.style.animationDelay = `${index * 0.05}s`
+
+    favoritesHorizontal.appendChild(gameButton)
+  })
+}
+
+// Render media content
+function renderMedia() {
+  const mediaGrid = document.getElementById("media-grid")
+  mediaGrid.innerHTML = ""
+
+  mediaContent.forEach((media, index) => {
+    const mediaCard = document.createElement("div")
+    mediaCard.className = "media-card"
+
+    if (media.type === "video") {
+      mediaCard.innerHTML = `
+        <div class="media-thumbnail" onclick="openMediaModal('${media.id}')">
+          <img src="${media.thumbnail}" alt="${media.title}" loading="lazy">
+          <div class="media-play-button">
+            <i class="ri-play-circle-fill"></i>
+          </div>
+        </div>
+        <div class="media-info">
+          <h3 class="media-title">${media.title}</h3>
+          <p class="media-description">${media.description}</p>
+          <span class="media-type">video</span>
+        </div>
+      `
+    } else {
+      mediaCard.innerHTML = `
+        <div class="media-thumbnail" onclick="openMediaModal('${media.id}')">
+          <img src="${media.thumbnail}" alt="${media.title}" loading="lazy">
+        </div>
+        <div class="media-info">
+          <h3 class="media-title">${media.title}</h3>
+          <p class="media-description">${media.description}</p>
+          <span class="media-type">image</span>
+        </div>
+      `
+    }
+
+    mediaCard.style.animationDelay = `${index * 0.1}s`
+    mediaGrid.appendChild(mediaCard)
+  })
+}
+
+// Open media modal
+function openMediaModal(mediaId) {
+  const media = mediaContent.find((m) => m.id === mediaId)
+  if (!media) return
+
+  const modal = document.createElement("div")
+  modal.className = "modal show"
+  modal.innerHTML = `
+    <div class="modal-content large">
+      <div class="modal-header">
+        <h3>${media.title}</h3>
+        <button class="modal-close" onclick="this.closest('.modal').remove()">
+          <i class="ri-close-line"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        ${
+          media.type === "video"
+            ? `<iframe src="${media.url}" width="100%" height="400" frameborder="0" allowfullscreen></iframe>`
+            : `<img src="${media.url}" alt="${media.title}" style="width: 100%; height: auto; border-radius: 0.5rem;">`
+        }
+        <p style="margin-top: 1rem; color: var(--text-muted);">${media.description}</p>
+      </div>
+    </div>
+  `
+
+  document.body.appendChild(modal)
+
+  // Close modal when clicking outside
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      modal.remove()
+    }
+  })
 }
 
 // Open game in about:blank tab
@@ -348,7 +594,11 @@ function openGameInAboutBlank(game) {
           padding: 0; 
           overflow: hidden; 
           background: #000; 
-          font-family: Arial, sans-serif;
+          font-family: 'Inter', Arial, sans-serif;
+        }
+        iframe {
+          background: #000;
+          font-family: 'Inter', Arial, sans-serif;
         }
         iframe { 
           width: 100vw; 
@@ -399,12 +649,12 @@ function openGameInAboutBlank(game) {
       <div class="game-header">
         <div class="game-title">${game.title}</div>
         <div class="game-controls">
-          <button class="control-btn" onclick="toggleFullscreen()">Fullscreen</button>
-          <button class="control-btn" onclick="window.close()">Close</button>
+          <button class="control-btn" onclick="toggleFullscreen()">fullscreen</button>
+          <button class="control-btn" onclick="window.close()">close</button>
         </div>
       </div>
       <div class="game-container">
-        <iframe src="${game.url}" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
+        <iframe src="${game.url}" allowfullscreen sandbox="allow-scripts allow-pointer-lock allow-same-origin allow-forms allow-popups allow-modals"></iframe>
       </div>
       <script>
         function toggleFullscreen() {
@@ -442,56 +692,6 @@ function toggleFavorite(gameId) {
   localStorage.setItem("cosmic_favorites", JSON.stringify(favorites))
   renderGames()
   renderFavorites()
-}
-
-// Render favorites
-function renderFavorites() {
-  const favoritesGrid = document.getElementById("favorites-grid")
-  const noFavorites = document.getElementById("noFavorites")
-
-  if (favorites.length === 0) {
-    noFavorites.style.display = "flex"
-    return
-  }
-
-  noFavorites.style.display = "none"
-  favoritesGrid.innerHTML = ""
-
-  const favoriteGames = games.filter((game) => favorites.includes(game.id))
-
-  favoriteGames.forEach((game, index) => {
-    const gameButton = document.createElement("div")
-    gameButton.className = "game-button"
-
-    gameButton.addEventListener("click", () => {
-      openGameInAboutBlank(game)
-    })
-
-    const gameImg = document.createElement("img")
-    gameImg.src = game.icon || "/placeholder.svg?height=180&width=180"
-    gameImg.alt = game.title
-    gameImg.loading = "lazy"
-
-    const overlayText = document.createElement("div")
-    overlayText.className = "overlay-text"
-    overlayText.textContent = game.title
-
-    const favoriteBtn = document.createElement("button")
-    favoriteBtn.className = "favorite-btn favorited"
-    favoriteBtn.innerHTML = `<i class="ri-star-fill"></i>`
-    favoriteBtn.onclick = (e) => {
-      e.stopPropagation()
-      toggleFavorite(game.id)
-    }
-
-    gameButton.appendChild(gameImg)
-    gameButton.appendChild(overlayText)
-    gameButton.appendChild(favoriteBtn)
-
-    gameButton.style.animationDelay = `${index * 0.05}s`
-
-    favoritesGrid.appendChild(gameButton)
-  })
 }
 
 // Setup game category filters
@@ -636,7 +836,7 @@ function startTimer() {
   timerTime = hours * 3600 + minutes * 60 + seconds
 
   if (timerTime <= 0) {
-    alert("Please set a valid time!")
+    alert("please set a valid time!")
     return
   }
 
@@ -645,7 +845,7 @@ function startTimer() {
     if (timerTime <= 0) {
       clearInterval(timerInterval)
       timerRunning = false
-      alert("Timer finished!")
+      alert("timer finished!")
       playTimerSound()
       return
     }
@@ -701,26 +901,30 @@ function playTimerSound() {
   oscillator.stop(audioContext.currentTime + 1)
 }
 
-// Ruffle emulator functions
-function loadFlashGame() {
-  const url = document.getElementById("ruffleUrl").value.trim()
-  if (!url) {
-    alert("Please enter a Flash game URL!")
-    return
-  }
+// Dictionary/Encyclopedia functions
+function setupDictionaryMode() {
+  const modeButtons = document.querySelectorAll(".mode-btn")
 
-  const container = document.getElementById("ruffleFrameContainer")
-  container.innerHTML = `
-    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
-    <ruffle-embed src="${url}" width="100%" height="400px"></ruffle-embed>
-  `
+  modeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      modeButtons.forEach((btn) => btn.classList.remove("active"))
+      button.classList.add("active")
+      dictionaryMode = button.getAttribute("data-mode")
+
+      const input = document.getElementById("dictionaryInput")
+      if (dictionaryMode === "dictionary") {
+        input.placeholder = "enter a word to look up..."
+      } else {
+        input.placeholder = "enter a topic to search..."
+      }
+    })
+  })
 }
 
-// Dictionary functions
 function lookupWord() {
   const word = document.getElementById("dictionaryInput").value.trim()
   if (!word) {
-    alert("Please enter a word to look up!")
+    alert("please enter a word or topic to look up!")
     return
   }
 
@@ -728,69 +932,113 @@ function lookupWord() {
   resultsContainer.innerHTML = `
     <div class="dictionary-loading">
       <i class="ri-loader-4-line loading-spinner"></i>
-      <p>Looking up "${word}"...</p>
+      <p>looking up "${word}"...</p>
     </div>
   `
 
-  // Use a free dictionary API
-  fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.title === "No Definitions Found") {
+  if (dictionaryMode === "dictionary") {
+    // Use dictionary API
+    fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.title === "No Definitions Found") {
+          resultsContainer.innerHTML = `
+            <div class="dictionary-error">
+              <i class="ri-alert-line"></i>
+              <h4>no definition found</h4>
+              <p>sorry, we couldn't find a definition for "${word}".</p>
+            </div>
+          `
+          return
+        }
+
+        const entry = data[0]
+        let definitionsHtml = ""
+
+        entry.meanings.forEach((meaning) => {
+          definitionsHtml += `
+            <div class="definition-section">
+              <h4 class="part-of-speech">${meaning.partOfSpeech}</h4>
+              <ol class="definitions-list">
+                ${meaning.definitions
+                  .slice(0, 3)
+                  .map(
+                    (def) => `
+                  <li class="definition-item">
+                    <p class="definition-text">${def.definition}</p>
+                    ${def.example ? `<p class="definition-example">"${def.example}"</p>` : ""}
+                  </li>
+                `,
+                  )
+                  .join("")}
+              </ol>
+            </div>
+          `
+        })
+
         resultsContainer.innerHTML = `
-          <div class="dictionary-error">
-            <i class="ri-alert-line"></i>
-            <h4>No definition found</h4>
-            <p>Sorry, we couldn't find a definition for "${word}".</p>
-          </div>
-        `
-        return
-      }
-
-      const entry = data[0]
-      let definitionsHtml = ""
-
-      entry.meanings.forEach((meaning) => {
-        definitionsHtml += `
-          <div class="definition-section">
-            <h4 class="part-of-speech">${meaning.partOfSpeech}</h4>
-            <ol class="definitions-list">
-              ${meaning.definitions
-                .slice(0, 3)
-                .map(
-                  (def) => `
-                <li class="definition-item">
-                  <p class="definition-text">${def.definition}</p>
-                  ${def.example ? `<p class="definition-example">"${def.example}"</p>` : ""}
-                </li>
-              `,
-                )
-                .join("")}
-            </ol>
+          <div class="dictionary-result">
+            <div class="word-header">
+              <h3 class="word-title">${entry.word}</h3>
+              ${entry.phonetic ? `<span class="word-phonetic">${entry.phonetic}</span>` : ""}
+            </div>
+            ${definitionsHtml}
           </div>
         `
       })
-
-      resultsContainer.innerHTML = `
-        <div class="dictionary-result">
-          <div class="word-header">
-            <h3 class="word-title">${entry.word}</h3>
-            ${entry.phonetic ? `<span class="word-phonetic">${entry.phonetic}</span>` : ""}
+      .catch((error) => {
+        console.error("dictionary error:", error)
+        resultsContainer.innerHTML = `
+          <div class="dictionary-error">
+            <i class="ri-alert-line"></i>
+            <h4>error</h4>
+            <p>failed to look up the word. please try again.</p>
           </div>
-          ${definitionsHtml}
-        </div>
-      `
-    })
-    .catch((error) => {
-      console.error("Dictionary error:", error)
-      resultsContainer.innerHTML = `
-        <div class="dictionary-error">
-          <i class="ri-alert-line"></i>
-          <h4>Error</h4>
-          <p>Failed to look up the word. Please try again.</p>
-        </div>
-      `
-    })
+        `
+      })
+  } else {
+    // Use Wikipedia API for encyclopedia
+    fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(word)}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.type === "disambiguation" || data.type === "no-extract") {
+          resultsContainer.innerHTML = `
+            <div class="dictionary-error">
+              <i class="ri-alert-line"></i>
+              <h4>no article found</h4>
+              <p>sorry, we couldn't find an encyclopedia entry for "${word}".</p>
+            </div>
+          `
+          return
+        }
+
+        resultsContainer.innerHTML = `
+          <div class="dictionary-result">
+            <div class="word-header">
+              <h3 class="word-title">${data.title}</h3>
+            </div>
+            <div class="encyclopedia-content">
+              ${data.thumbnail ? `<img src="${data.thumbnail.source}" alt="${data.title}" style="float: right; margin: 0 0 1rem 1rem; max-width: 200px; border-radius: 0.5rem;">` : ""}
+              <p class="encyclopedia-extract">${data.extract}</p>
+              <a href="${data.content_urls.desktop.page}" target="_blank" class="encyclopedia-link">
+                <i class="ri-external-link-line"></i>
+                read more on wikipedia
+              </a>
+            </div>
+          </div>
+        `
+      })
+      .catch((error) => {
+        console.error("encyclopedia error:", error)
+        resultsContainer.innerHTML = `
+          <div class="dictionary-error">
+            <i class="ri-alert-line"></i>
+            <h4>error</h4>
+            <p>failed to look up the topic. please try again.</p>
+          </div>
+        `
+      })
+  }
 }
 
 function handleDictionaryKeyPress(event) {
@@ -814,14 +1062,14 @@ async function sendMessageToGroq(message) {
           {
             role: "system",
             content:
-              "You are a helpful AI assistant for a gaming website called 'cosmic.' You help users with games, website features, and general questions. Keep responses concise and friendly.",
+              "you are a helpful ai assistant for an unblocked/unrestricted school and work gaming website called 'cosmic.', which has over 400 unblocked games. you help users with games, website features, and general questions. keep responses concise and friendly. always respond in lowercase unless it's a proper noun or game title.",
           },
           {
             role: "user",
             content: message,
           },
         ],
-        max_tokens: 150,
+        max_tokens: 2000,
         temperature: 0.7,
       }),
     })
@@ -833,14 +1081,14 @@ async function sendMessageToGroq(message) {
     const data = await response.json()
     return data.choices[0].message.content
   } catch (error) {
-    console.error("Error calling Groq API:", error)
+    console.error("error calling groq api:", error)
     // Fallback responses
     const fallbackResponses = [
-      "I'm here to help! What would you like to know about cosmic?",
-      "Sorry, I'm having trouble connecting right now. Try asking about our games or features!",
-      "I can help you with games, settings, or general questions about the site.",
-      "Have you tried checking out our games section? There are tons of great options!",
-      "The tools section has some useful features you might find interesting.",
+      "i'm here to help! what would you like to know about cosmic?",
+      "sorry, i'm having trouble connecting right now. try asking about our games or features!",
+      "i can help you with games, settings, or general questions about the site.",
+      "have you tried checking out our games section? there are tons of great options!",
+      "the tools section has some useful features you might find interesting.",
     ]
     return fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)]
   }
@@ -912,7 +1160,7 @@ async function sendMessage() {
         <div class="message-avatar">
           <i class="ri-robot-line"></i>
         </div>
-        <div class="message-content">Sorry, I'm having trouble responding right now. Please try again!</div>
+        <div class="message-content">sorry, i'm having trouble responding right now. please try again!</div>
       `
       chatMessages.appendChild(errorMessage)
       chatMessages.scrollTop = chatMessages.scrollHeight
@@ -926,30 +1174,146 @@ function handleChatKeyPress(event) {
   }
 }
 
+// Wallpaper functions
+function changeWallpaper(type) {
+  const backgroundContainer = document.getElementById("backgroundContainer")
+
+  // Clear existing backgrounds
+  backgroundContainer.innerHTML = ""
+
+  // Remove any existing dynamic backgrounds
+  const existingBg = document.querySelector(".dynamic-background")
+  if (existingBg) {
+    existingBg.remove()
+  }
+
+  if (type === "none") {
+    return
+  }
+
+  if (type === "rain") {
+    createDigitalRain()
+  } else if (type === "stars") {
+    createStarfield()
+  } else if (type === "custom") {
+    const customUrl = localStorage.getItem("cosmic_custom_wallpaper")
+    if (customUrl) {
+      setImageWallpaper(customUrl)
+    }
+  } else if (wallpapers[type]) {
+    setImageWallpaper(wallpapers[type])
+  }
+}
+
+function setImageWallpaper(url) {
+  const backgroundContainer = document.getElementById("backgroundContainer")
+  backgroundContainer.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${url}') center/cover no-repeat;
+    z-index: -1;
+  `
+}
+
+function setCustomWallpaper() {
+  const url = document.getElementById("customWallpaperUrl").value.trim()
+  if (!url) {
+    alert("please enter a valid image url!")
+    return
+  }
+
+  localStorage.setItem("cosmic_custom_wallpaper", url)
+  changeWallpaper("custom")
+  alert("custom wallpaper set successfully!")
+}
+
+function createDigitalRain() {
+  const rainContainer = document.createElement("div")
+  rainContainer.className = "dynamic-background digital-rain"
+  rainContainer.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+    background: #000;
+  `
+
+  for (let i = 0; i < 50; i++) {
+    const drop = document.createElement("div")
+    drop.textContent = String.fromCharCode(0x30a0 + Math.random() * 96)
+    drop.style.cssText = `
+      position: absolute;
+      color: #0f0;
+      font-family: monospace;
+      font-size: ${Math.random() * 10 + 10}px;
+      left: ${Math.random() * 100}%;
+      animation: rain ${Math.random() * 3 + 2}s linear infinite;
+      animation-delay: ${Math.random() * 2}s;
+    `
+    rainContainer.appendChild(drop)
+  }
+
+  // Add rain animation
+  const style = document.createElement("style")
+  style.textContent = `
+    @keyframes rain {
+      0% { transform: translateY(-100vh); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+  `
+  document.head.appendChild(style)
+
+  document.body.appendChild(rainContainer)
+}
+
+function createStarfield() {
+  const starsContainer = document.getElementById("starsContainer")
+  starsContainer.innerHTML = ""
+  starsContainer.style.display = "block"
+
+  for (let i = 0; i < 200; i++) {
+    const star = document.createElement("div")
+    star.className = "star"
+    star.style.width = `${Math.random() * 3 + 1}px`
+    star.style.height = star.style.width
+    star.style.left = `${Math.random() * 100}%`
+    star.style.top = `${Math.random() * 100}%`
+    star.style.animationDelay = `${Math.random() * 3}s`
+    star.style.animationDuration = `${Math.random() * 3 + 2}s`
+    starsContainer.appendChild(star)
+  }
+}
+
 // initialize the page
 document.addEventListener("DOMContentLoaded", () => {
-  createStars()
   loadGames()
+  renderMedia()
   renderBookmarklets()
   setupSearch()
   setupGamesSearch()
   setupNavbar()
   setupMobileMenu()
   setupSettings()
+  setupDictionaryMode()
   loadSettings()
   startTypingAnimation()
   setupPanicKey()
   setupBackgroundEffects()
   renderFavorites()
-  updateStats()
 })
 
 // Add keyboard event listener for ESC key to close modal
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
-    closeAddGameModal()
-    closePrivacyModal()
-    closeTermsModal()
+    const modals = document.querySelectorAll(".modal.show")
+    modals.forEach((modal) => modal.remove())
   }
 })
 
@@ -992,22 +1356,6 @@ function startTypingAnimation() {
   type()
 }
 
-// create floating stars
-function createStars() {
-  const starsContainer = document.getElementById("starsContainer")
-  for (let i = 0; i < 150; i++) {
-    const star = document.createElement("div")
-    star.className = "star"
-    star.style.width = `${Math.random() * 3 + 1}px`
-    star.style.height = star.style.width
-    star.style.left = `${Math.random() * 100}%`
-    star.style.top = `${Math.random() * 100}%`
-    star.style.animationDelay = `${Math.random() * 3}s`
-    star.style.animationDuration = `${Math.random() * 3 + 2}s`
-    starsContainer.appendChild(star)
-  }
-}
-
 // show/hide sections
 function showSection(sectionName) {
   const sections = document.querySelectorAll(".page-section")
@@ -1023,9 +1371,9 @@ function showSection(sectionName) {
     // hide mobile menu
     document.getElementById("mobileMenu").classList.remove("show")
 
-    // Special handling for favorites section
-    if (sectionName === "favorites") {
-      renderFavorites()
+    // Special handling for media section
+    if (sectionName === "media") {
+      renderMedia()
     }
   }
 }
@@ -1136,10 +1484,11 @@ function setupMobileMenu() {
 function setupSettings() {
   const disguiseSelect = document.getElementById("disguiseSelect")
   const themeSelect = document.getElementById("themeSelect")
-  const backgroundSelect = document.getElementById("backgroundSelect")
+  const wallpaperSelect = document.getElementById("wallpaperSelect")
   const animationSpeed = document.getElementById("animationSpeed")
   const panicKeySelect = document.getElementById("panicKeySelect")
   const fontSelect = document.getElementById("fontSelect")
+  const customWallpaperSection = document.getElementById("customWallpaperSection")
 
   disguiseSelect.addEventListener("change", function () {
     changeDisguise(this.value)
@@ -1151,9 +1500,16 @@ function setupSettings() {
     localStorage.setItem("cosmic_theme", this.value)
   })
 
-  backgroundSelect.addEventListener("change", function () {
-    changeBackground(this.value)
-    localStorage.setItem("cosmic_background", this.value)
+  wallpaperSelect.addEventListener("change", function () {
+    changeWallpaper(this.value)
+    localStorage.setItem("cosmic_wallpaper", this.value)
+
+    // Show/hide custom wallpaper section
+    if (this.value === "custom") {
+      customWallpaperSection.style.display = "block"
+    } else {
+      customWallpaperSection.style.display = "none"
+    }
   })
 
   animationSpeed.addEventListener("change", function () {
@@ -1177,7 +1533,7 @@ function setupSettings() {
 function loadSettings() {
   const savedDisguise = localStorage.getItem("cosmic_disguise")
   const savedTheme = localStorage.getItem("cosmic_theme")
-  const savedBackground = localStorage.getItem("cosmic_background")
+  const savedWallpaper = localStorage.getItem("cosmic_wallpaper")
   const savedAnimationSpeed = localStorage.getItem("cosmic_animation_speed")
   const savedPanicKey = localStorage.getItem("cosmic_panic_key")
   const savedFont = localStorage.getItem("cosmic_font")
@@ -1192,9 +1548,15 @@ function loadSettings() {
     changeTheme(savedTheme)
   }
 
-  if (savedBackground) {
-    document.getElementById("backgroundSelect").value = savedBackground
-    changeBackground(savedBackground)
+  if (savedWallpaper) {
+    document.getElementById("wallpaperSelect").value = savedWallpaper
+    changeWallpaper(savedWallpaper)
+
+    if (savedWallpaper === "custom") {
+      document.getElementById("customWallpaperSection").style.display = "block"
+    }
+  } else {
+    changeWallpaper("anime") // Default wallpaper
   }
 
   if (savedAnimationSpeed) {
@@ -1220,22 +1582,22 @@ function changeDisguise(type) {
       title: "cosmic.",
       icon: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwMDAwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNyA2QzMuNjkgNiAxIDEuNjkgMSAxMlMxIDE5LjMxIDMuNjkgMjEgNyAyMVMxMC4zMSAyMSAxMjIgMTkuMVMxMjIgMTJTMTEuMzEgMyA3IDNTNyA2eiIvPjwvc3ZnPg==",
     },
-    google: { title: "Google", icon: "https://www.google.com/favicon.ico" },
+    google: { title: "google", icon: "https://www.google.com/favicon.ico" },
     drive: {
-      title: "My Drive - Google Drive",
+      title: "my drive - google drive",
       icon: "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png",
     },
-    gmail: { title: "Gmail", icon: "https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" },
-    classroom: { title: "Classes", icon: "https://ssl.gstatic.com/classroom/favicon.png" },
-    docs: { title: "Google Docs", icon: "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico" },
-    canvas: { title: "Dashboard", icon: "https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico" },
-    zoom: { title: "Zoom", icon: "https://st1.zoom.us/zoom.ico" },
+    gmail: { title: "gmail", icon: "https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" },
+    classroom: { title: "classes", icon: "https://ssl.gstatic.com/classroom/favicon.png" },
+    docs: { title: "google docs", icon: "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico" },
+    canvas: { title: "dashboard", icon: "https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico" },
+    zoom: { title: "zoom", icon: "https://st1.zoom.us/zoom.ico" },
     teams: {
-      title: "Microsoft Teams",
+      title: "microsoft teams",
       icon: "https://res.cdn.office.net/teams/1.3.00.4461/images/favicons/favicon-96x96.png",
     },
-    youtube: { title: "YouTube", icon: "https://www.youtube.com/favicon.ico" },
-    netflix: { title: "Netflix", icon: "https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.ico" },
+    youtube: { title: "youtube", icon: "https://www.youtube.com/favicon.ico" },
+    netflix: { title: "netflix", icon: "https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.ico" },
   }
 
   const disguise = disguises[type]
@@ -1249,228 +1611,6 @@ function changeDisguise(type) {
 // change theme
 function changeTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme)
-}
-
-// change background effects
-function changeBackground(type) {
-  const starsContainer = document.getElementById("starsContainer")
-  const mountainBackground = document.getElementById("mountainBackground")
-
-  // Reset all backgrounds
-  starsContainer.style.display = "none"
-  mountainBackground.classList.remove("show")
-
-  // Remove any existing dynamic backgrounds
-  const existingBg = document.querySelector(".dynamic-background")
-  if (existingBg) {
-    existingBg.remove()
-  }
-
-  switch (type) {
-    case "stars":
-      starsContainer.style.display = "block"
-      break
-    case "mountains":
-      mountainBackground.classList.add("show")
-      break
-    case "particles":
-      starsContainer.style.display = "block"
-      break
-    case "aurora":
-      starsContainer.style.display = "block"
-      break
-    case "rain":
-      createDigitalRain()
-      break
-    case "ocean":
-      createOceanBackground()
-      break
-    case "islands":
-      createIslandsBackground()
-      break
-    case "clouds":
-      createCloudsBackground()
-      break
-    case "none":
-      break
-  }
-}
-
-// Create ocean background
-function createOceanBackground() {
-  const oceanBg = document.createElement("div")
-  oceanBg.className = "dynamic-background ocean-background"
-  oceanBg.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(180deg, #001122 0%, #003366 50%, #004488 100%);
-    z-index: 0;
-  `
-
-  // Add animated waves
-  for (let i = 0; i < 3; i++) {
-    const wave = document.createElement("div")
-    wave.style.cssText = `
-      position: absolute;
-      bottom: ${i * 20}px;
-      left: 0;
-      width: 200%;
-      height: 100px;
-      background: linear-gradient(90deg, transparent, rgba(0, 150, 255, 0.3), transparent);
-      border-radius: 50px;
-      animation: wave ${3 + i}s ease-in-out infinite;
-      animation-delay: ${i * 0.5}s;
-    `
-    oceanBg.appendChild(wave)
-  }
-
-  // Add wave animation
-  const style = document.createElement("style")
-  style.textContent = `
-    @keyframes wave {
-      0%, 100% { transform: translateX(-50%) translateY(0px); }
-      50% { transform: translateX(-50%) translateY(-20px); }
-    }
-  `
-  document.head.appendChild(style)
-
-  document.body.appendChild(oceanBg)
-}
-
-// Create floating islands background
-function createIslandsBackground() {
-  const islandsBg = document.createElement("div")
-  islandsBg.className = "dynamic-background islands-background"
-  islandsBg.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(180deg, #87CEEB 0%, #98D8E8 50%, #B0E0E6 100%);
-    z-index: 0;
-  `
-
-  // Add floating islands
-  for (let i = 0; i < 5; i++) {
-    const island = document.createElement("div")
-    island.style.cssText = `
-      position: absolute;
-      width: ${Math.random() * 100 + 50}px;
-      height: ${Math.random() * 50 + 30}px;
-      background: #228B22;
-      border-radius: 50% 50% 0 0;
-      top: ${Math.random() * 70 + 10}%;
-      left: ${Math.random() * 80 + 10}%;
-      animation: float ${Math.random() * 3 + 4}s ease-in-out infinite;
-      animation-delay: ${Math.random() * 2}s;
-    `
-    islandsBg.appendChild(island)
-  }
-
-  // Add floating animation
-  const style = document.createElement("style")
-  style.textContent = `
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-15px); }
-    }
-  `
-  document.head.appendChild(style)
-
-  document.body.appendChild(islandsBg)
-}
-
-// Create moving clouds background
-function createCloudsBackground() {
-  const cloudsBg = document.createElement("div")
-  cloudsBg.className = "dynamic-background clouds-background"
-  cloudsBg.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(180deg, #87CEEB 0%, #B0C4DE 50%, #D3D3D3 100%);
-    z-index: 0;
-    overflow: hidden;
-  `
-
-  // Add moving clouds
-  for (let i = 0; i < 8; i++) {
-    const cloud = document.createElement("div")
-    cloud.style.cssText = `
-      position: absolute;
-      width: ${Math.random() * 150 + 100}px;
-      height: ${Math.random() * 60 + 40}px;
-      background: rgba(255, 255, 255, 0.8);
-      border-radius: 50px;
-      top: ${Math.random() * 60 + 10}%;
-      left: -200px;
-      animation: moveCloud ${Math.random() * 20 + 15}s linear infinite;
-      animation-delay: ${Math.random() * 10}s;
-    `
-    cloudsBg.appendChild(cloud)
-  }
-
-  // Add cloud movement animation
-  const style = document.createElement("style")
-  style.textContent = `
-    @keyframes moveCloud {
-      0% { transform: translateX(-200px); }
-      100% { transform: translateX(calc(100vw + 200px)); }
-    }
-  `
-  document.head.appendChild(style)
-
-  document.body.appendChild(cloudsBg)
-}
-
-// Create digital rain effect
-function createDigitalRain() {
-  const rainContainer = document.createElement("div")
-  rainContainer.className = "dynamic-background digital-rain"
-  rainContainer.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-    overflow: hidden;
-    background: #000;
-  `
-
-  for (let i = 0; i < 50; i++) {
-    const drop = document.createElement("div")
-    drop.textContent = String.fromCharCode(0x30a0 + Math.random() * 96)
-    drop.style.cssText = `
-      position: absolute;
-      color: #0f0;
-      font-family: monospace;
-      font-size: ${Math.random() * 10 + 10}px;
-      left: ${Math.random() * 100}%;
-      animation: rain ${Math.random() * 3 + 2}s linear infinite;
-      animation-delay: ${Math.random() * 2}s;
-    `
-    rainContainer.appendChild(drop)
-  }
-
-  // Add rain animation
-  const style = document.createElement("style")
-  style.textContent = `
-    @keyframes rain {
-      0% { transform: translateY(-100vh); opacity: 1; }
-      100% { transform: translateY(100vh); opacity: 0; }
-    }
-  `
-  document.head.appendChild(style)
-
-  document.body.appendChild(rainContainer)
 }
 
 // change animation speed
@@ -1488,7 +1628,7 @@ function changeAnimationSpeed(speed) {
 
 // change font
 function changeFont(font) {
-  document.body.className = document.body.className.replace(/\b(orbitron|comfortaa|mono)-font\b/g, "")
+  document.body.className = document.body.className.replace(/\b(orbitron|comfortaa|mono|inter)-font\b/g, "")
 
   if (font === "orbitron") {
     document.body.classList.add("orbitron-font")
@@ -1496,6 +1636,8 @@ function changeFont(font) {
     document.body.classList.add("comfortaa-font")
   } else if (font === "mono") {
     document.body.classList.add("mono-font")
+  } else if (font === "inter") {
+    document.body.classList.add("inter-font")
   }
 }
 
@@ -1536,8 +1678,8 @@ function handlePanicKey(event) {
 
 // setup background effects
 function setupBackgroundEffects() {
-  const savedBackground = localStorage.getItem("cosmic_background") || "mountains"
-  changeBackground(savedBackground)
+  const savedWallpaper = localStorage.getItem("cosmic_wallpaper") || "anime"
+  changeWallpaper(savedWallpaper)
 }
 
 // Modal functions
@@ -1596,9 +1738,10 @@ function importFavorites() {
           }
 
           renderFavorites()
-          alert("Favorites imported successfully!")
+          renderGames()
+          alert("favorites imported successfully!")
         } catch (error) {
-          alert("Error importing favorites. Please check the file format.")
+          alert("error importing favorites. please check the file format.")
         }
       }
       reader.readAsText(file)
@@ -1613,10 +1756,11 @@ function exportSettings() {
   const settings = {
     theme: localStorage.getItem("cosmic_theme") || "cosmic",
     disguise: localStorage.getItem("cosmic_disguise") || "default",
-    background: localStorage.getItem("cosmic_background") || "mountains",
+    wallpaper: localStorage.getItem("cosmic_wallpaper") || "anime",
     animationSpeed: localStorage.getItem("cosmic_animation_speed") || "normal",
     panicKey: localStorage.getItem("cosmic_panic_key") || "none",
     font: localStorage.getItem("cosmic_font") || "default",
+    customWallpaper: localStorage.getItem("cosmic_custom_wallpaper") || "",
   }
 
   const dataStr = JSON.stringify(settings, null, 2)
@@ -1657,10 +1801,10 @@ function importSettings() {
             changeDisguise(settings.disguise)
           }
 
-          if (settings.background) {
-            localStorage.setItem("cosmic_background", settings.background)
-            document.getElementById("backgroundSelect").value = settings.background
-            changeBackground(settings.background)
+          if (settings.wallpaper) {
+            localStorage.setItem("cosmic_wallpaper", settings.wallpaper)
+            document.getElementById("wallpaperSelect").value = settings.wallpaper
+            changeWallpaper(settings.wallpaper)
           }
 
           if (settings.animationSpeed) {
@@ -1682,9 +1826,13 @@ function importSettings() {
             changeFont(settings.font)
           }
 
-          alert("Settings imported successfully!")
+          if (settings.customWallpaper) {
+            localStorage.setItem("cosmic_custom_wallpaper", settings.customWallpaper)
+          }
+
+          alert("settings imported successfully!")
         } catch (error) {
-          alert("Error importing settings. Please check the file format.")
+          alert("error importing settings. please check the file format.")
         }
       }
       reader.readAsText(file)
@@ -1716,51 +1864,52 @@ function openInAboutBlank() {
 
 // clear game history
 function clearGameHistory() {
-  if (confirm("Are you sure you want to clear your game history?")) {
+  if (confirm("are you sure you want to clear your game history?")) {
     gameHistory.length = 0
     localStorage.removeItem("cosmic_game_history")
-    alert("Game history cleared!")
+    alert("game history cleared!")
   }
 }
 
 // clear cache
 function clearCache() {
-  if (confirm("Are you sure you want to clear the cache? This will remove all stored data.")) {
+  if (confirm("are you sure you want to clear the cache? this will remove all stored data.")) {
     localStorage.clear()
     sessionStorage.clear()
-    alert("Cache cleared successfully!")
+    alert("cache cleared successfully!")
     location.reload()
   }
 }
 
 // reset settings
 function resetSettings() {
-  if (confirm("Are you sure you want to reset all settings? This cannot be undone.")) {
+  if (confirm("are you sure you want to reset all settings? this cannot be undone.")) {
     localStorage.removeItem("cosmic_disguise")
     localStorage.removeItem("cosmic_theme")
-    localStorage.removeItem("cosmic_background")
+    localStorage.removeItem("cosmic_wallpaper")
     localStorage.removeItem("cosmic_animation_speed")
     localStorage.removeItem("cosmic_panic_key")
     localStorage.removeItem("cosmic_font")
+    localStorage.removeItem("cosmic_custom_wallpaper")
 
     currentGame = null
     panicKey = "none"
 
     document.getElementById("disguiseSelect").value = "default"
     document.getElementById("themeSelect").value = "cosmic"
-    document.getElementById("backgroundSelect").value = "mountains"
+    document.getElementById("wallpaperSelect").value = "anime"
     document.getElementById("animationSpeed").value = "normal"
     document.getElementById("panicKeySelect").value = "none"
     document.getElementById("fontSelect").value = "default"
 
     changeDisguise("default")
     changeTheme("cosmic")
-    changeBackground("mountains")
+    changeWallpaper("anime")
     changeAnimationSpeed("normal")
     changeFont("default")
     setupPanicKey()
 
-    alert("Settings reset successfully!")
+    alert("settings reset successfully!")
   }
 }
 
@@ -1772,10 +1921,11 @@ function downloadBackup() {
     settings: {
       theme: localStorage.getItem("cosmic_theme") || "cosmic",
       disguise: localStorage.getItem("cosmic_disguise") || "default",
-      background: localStorage.getItem("cosmic_background") || "mountains",
+      wallpaper: localStorage.getItem("cosmic_wallpaper") || "anime",
       animationSpeed: localStorage.getItem("cosmic_animation_speed") || "normal",
       panicKey: localStorage.getItem("cosmic_panic_key") || "none",
       font: localStorage.getItem("cosmic_font") || "default",
+      customWallpaper: localStorage.getItem("cosmic_custom_wallpaper") || "",
     },
     backupDate: new Date().toISOString(),
   }
