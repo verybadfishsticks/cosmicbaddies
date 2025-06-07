@@ -6,7 +6,7 @@
     <title>cosmic.</title>
     <link href="assets/styles.css" rel="stylesheet">
     <meta name="description" content="play the best unblocked games at cosmic. play anytime, anywhere - no restrictions.">
-    <meta name="keywords" content="WebGL powered games">
+    <meta name="keywords" content="webgl html5 html unblocked games gaming unblockedgames unblockedgaming classroomgg selenite cosmic cosmicgames cosmicunblockedgames ai unblockedai ubg unblockedhtmlgames unblockedwebglgames unblockedhtml5 unblockedhtml5games ubghtml ubghtml5 unblockedgams gams ugb selenitegames seleniteunblockedgames cosmicunblocked c6smic henman12 paradiseos">
     <meta name="author" content="c6smic">
     
     <!-- Gaming Planet Favicon -->
@@ -15,14 +15,14 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Comfortaa:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Remix Icons -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Mountain Background -->
-    <div class="mountain-background show" id="mountainBackground"></div>
+    <!-- Dynamic Background Container -->
+    <div class="background-container" id="backgroundContainer"></div>
     
     <!-- Stars Background -->
     <div class="stars-container" id="starsContainer"></div>
@@ -45,7 +45,7 @@
                     <input 
                         type="text" 
                         class="search-input" 
-                        placeholder="Search games..." 
+                        placeholder="search games..." 
                         id="searchInput"
                         autocomplete="off"
                     >
@@ -55,7 +55,7 @@
             
             <div class="nav-links">
                 <span class="nav-link" onclick="showSection('games')">games</span>
-                <span class="nav-link" onclick="showSection('favorites')">favorites</span>
+                <span class="nav-link" onclick="showSection('media')">media</span>
                 <span class="nav-link" onclick="showSection('tools')">tools</span>
                 <span class="nav-link" onclick="showSection('bookmarklets')">bookmarklets</span>
                 <span class="nav-link" onclick="showSection('settings')">settings</span>
@@ -72,7 +72,7 @@
                     <input 
                         type="text" 
                         class="search-input" 
-                        placeholder="Search games..." 
+                        placeholder="search games..." 
                         id="mobileSearchInput"
                         autocomplete="off"
                     >
@@ -80,11 +80,11 @@
                 </div>
             </div>
             <div class="mobile-nav-links">
-                <span class="mobile-nav-link" onclick="showSection('games')">Games</span>
-                <span class="mobile-nav-link" onclick="showSection('favorites')">Favorites</span>
-                <span class="mobile-nav-link" onclick="showSection('tools')">Tools</span>
-                <span class="mobile-nav-link" onclick="showSection('bookmarklets')">Bookmarklets</span>
-                <span class="mobile-nav-link" onclick="showSection('settings')">Settings</span>
+                <span class="mobile-nav-link" onclick="showSection('games')">games</span>
+                <span class="mobile-nav-link" onclick="showSection('media')">media</span>
+                <span class="mobile-nav-link" onclick="showSection('tools')">tools</span>
+                <span class="mobile-nav-link" onclick="showSection('bookmarklets')">bookmarklets</span>
+                <span class="mobile-nav-link" onclick="showSection('settings')">settings</span>
             </div>
         </div>
     </nav>
@@ -95,17 +95,6 @@
             <div class="hero-content">
                 <h1 class="hero-title">welcome to cosmic.</h1>
                 <p class="hero-subtitle" id="typingText"></p>
-                
-                <!-- Quick Actions -->
-                <div class="hero-actions">
-                    <button class="hero-btn primary" onclick="showSection('games')">
-                        <i class="ri-gamepad-line"></i>
-                        Browse Games
-                    </button>
-                    <button class="hero-btn secondary" onclick="showSection('favorites')">
-                        <i class="ri-star-line"></i>
-                        My Favorites
-                    </button>
                 </div>
             </div>
         </div>
@@ -114,18 +103,28 @@
     <!-- Games Section -->
     <section id="games" class="page-section hidden">
         <div class="games-container">
+            <!-- Favorites Section at Top -->
+            <div class="favorites-section" id="favoritesSection" style="display: none;">
+                <h3 class="favorites-title">
+                    <i class="ri-star-fill"></i>
+                    your favorites
+                </h3>
+                <div class="favorites-horizontal" id="favoritesHorizontal">
+                    <!-- Favorite games will be loaded here -->
+                </div>
+            </div>
+
             <div class="games-header">
                 <h2 class="section-title">cosmic games</h2>
-                <p class="section-subtitle">
-                    play without limits, anytime, anywhere - no restrictions.
-                </p>
+                <div class="games-count" id="gamesCount">
+                </div>
                 
                 <!-- Search in Games Page -->
                 <div class="games-search-container">
                     <input 
                         type="text" 
                         class="games-search-input" 
-                        placeholder="Search games..." 
+                        placeholder="search through over 400 games..." 
                         id="gamesSearchInput"
                         autocomplete="off"
                     >
@@ -133,13 +132,13 @@
                 </div>
                 
                 <div class="games-filters">
-                    <button class="filter-btn active" data-category="all">All Games</button>
-                    <button class="filter-btn" data-category="action">Action</button>
-                    <button class="filter-btn" data-category="puzzle">Puzzle</button>
-                    <button class="filter-btn" data-category="strategy">Strategy</button>
-                    <button class="filter-btn" data-category="arcade">Arcade</button>
-                    <button class="filter-btn" data-category="sports">Sports</button>
-                    <button class="filter-btn" data-category="custom">Custom</button>
+                    <button class="filter-btn active" data-category="all">all games</button>
+                    <button class="filter-btn" data-category="action">action</button>
+                    <button class="filter-btn" data-category="puzzle">puzzle</button>
+                    <button class="filter-btn" data-category="strategy">strategy</button>
+                    <button class="filter-btn" data-category="arcade">arcade</button>
+                    <button class="filter-btn" data-category="sports">sports</button>
+                    <button class="filter-btn" data-category="custom">custom</button>
                 </div>
             </div>
             
@@ -147,32 +146,23 @@
                 <!-- Games will be loaded here dynamically -->
                 <div class="loading-games">
                     <i class="ri-loader-4-line loading-spinner"></i>
-                    <p>Loading games...</p>
+                    <p></p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Favorites Section -->
-    <section id="favorites" class="page-section hidden">
-        <div class="favorites-container">
-            <div class="favorites-header">
-                <h2 class="section-title">my favorites</h2>
+    <!-- Media Section -->
+    <section id="media" class="page-section hidden">
+        <div class="media-container">
+            <div class="media-header">
+                <h2 class="section-title">cosmic media</h2>
                 <p class="section-subtitle">
-                    your personal favorited games collection.
                 </p>
             </div>
             
-            <div class="favorites-grid" id="favorites-grid">
-                <!-- Favorite games will be loaded here -->
-                <div class="no-favorites" id="noFavorites">
-                    <i class="ri-star-line"></i>
-                    <h3>No favorites yet</h3>
-                    <p>Star some games to see them here!</p>
-                    <button class="hero-btn primary" onclick="showSection('games')">
-                        Browse Games
-                    </button>
-                </div>
+            <div class="media-grid" id="media-grid">
+                <!-- Media will be loaded here dynamically -->
             </div>
         </div>
     </section>
@@ -182,7 +172,6 @@
         <div class="tools-section">
             <h2 class="section-title">cosmic tools</h2>
             <p class="section-subtitle">
-                powerful tools to enhance your cosmic experience.
             </p>
             
             <div class="tools-grid">
@@ -193,7 +182,7 @@
                         <h3 class="tool-title">calculator</h3>
                     </div>
                     <p class="tool-description">
-                        A fully functional calculator for your math needs.
+                        a fully functional calculator for your math needs.
                     </p>
                     <div class="calculator-container">
                         <div class="calculator-display">
@@ -233,7 +222,7 @@
                         <h3 class="tool-title">ai assistant</h3>
                     </div>
                     <p class="tool-description">
-                        Chat with our AI assistant for help and information.
+                        chat with our ai assistant for help and information.
                     </p>
                     <div class="chatbot-container">
                         <div class="chat-messages" id="chatMessages">
@@ -242,7 +231,7 @@
                                     <i class="ri-robot-line"></i>
                                 </div>
                                 <div class="message-content">
-                                    Hello! I'm your AI assistant. How can I help you today?
+                                    hello! i'm your ai assistant. how can i help you today?
                                 </div>
                             </div>
                         </div>
@@ -250,7 +239,7 @@
                             <input 
                                 type="text" 
                                 class="chat-input" 
-                                placeholder="Type your message..." 
+                                placeholder="type your message..." 
                                 id="chatInput"
                                 onkeypress="handleChatKeyPress(event)"
                             >
@@ -268,27 +257,27 @@
                         <h3 class="tool-title">timer</h3>
                     </div>
                     <p class="tool-description">
-                        Customizable timer for productivity and time management.
+                        customizable timer for productivity and time management.
                     </p>
                     <div class="timer-container">
                         <div class="timer-display" id="timerDisplay">00:00:00</div>
                         <div class="timer-inputs">
-                            <input type="number" id="timerHours" placeholder="Hours" min="0" max="23" value="0">
-                            <input type="number" id="timerMinutes" placeholder="Minutes" min="0" max="59" value="5">
-                            <input type="number" id="timerSeconds" placeholder="Seconds" min="0" max="59" value="0">
+                            <input type="number" id="timerHours" placeholder="hours" min="0" max="23" value="0">
+                            <input type="number" id="timerMinutes" placeholder="minutes" min="0" max="59" value="5">
+                            <input type="number" id="timerSeconds" placeholder="seconds" min="0" max="59" value="0">
                         </div>
                         <div class="timer-controls">
                             <button onclick="startTimer()" class="timer-btn start">
                                 <i class="ri-play-line"></i>
-                                Start
+                                start
                             </button>
                             <button onclick="pauseTimer()" class="timer-btn pause">
                                 <i class="ri-pause-line"></i>
-                                Pause
+                                pause
                             </button>
                             <button onclick="resetTimer()" class="timer-btn reset">
                                 <i class="ri-refresh-line"></i>
-                                Reset
+                                reset
                             </button>
                         </div>
                     </div>
@@ -301,57 +290,49 @@
                         <h3 class="tool-title">flash emulator</h3>
                     </div>
                     <p class="tool-description">
-                        Play Flash games using the Ruffle emulator.
+                        play flash games using the ruffle emulator.
                     </p>
                     <div class="ruffle-container">
-                        <div class="ruffle-input-group">
-                            <input 
-                                type="url" 
-                                class="ruffle-input" 
-                                placeholder="Enter Flash game URL (.swf)" 
-                                id="ruffleUrl"
-                            >
-                            <button class="ruffle-btn" onclick="loadFlashGame()">
-                                <i class="ri-play-line"></i>
-                                Load
-                            </button>
-                        </div>
-                        <div class="ruffle-frame-container" id="ruffleFrameContainer">
-                            <div class="ruffle-placeholder">
-                                <i class="ri-gamepad-2-line"></i>
-                                <p>Enter a Flash game URL to start playing</p>
-                            </div>
-                        </div>
+                        <iframe 
+                            src="/g/g/Ruffle/Ruffle.html" 
+                            class="ruffle-frame"
+                            title="ruffle flash emulator"
+                            sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                        ></iframe>
                     </div>
                 </div>
 
-                <!-- Dictionary Tool -->
+                <!-- Dictionary/Encyclopedia Tool -->
                 <div class="tool-card">
                     <div class="tool-header">
                         <i class="ri-book-open-line tool-icon"></i>
-                        <h3 class="tool-title">dictionary</h3>
+                        <h3 class="tool-title">dictionary & encyclopedia</h3>
                     </div>
                     <p class="tool-description">
-                        Look up word definitions and meanings.
+                        look up word definitions or encyclopedia entries.
                     </p>
                     <div class="dictionary-container">
+                        <div class="dictionary-mode-toggle">
+                            <button class="mode-btn active" data-mode="dictionary">dictionary</button>
+                            <button class="mode-btn" data-mode="encyclopedia">encyclopedia</button>
+                        </div>
                         <div class="dictionary-input-group">
                             <input 
                                 type="text" 
                                 class="dictionary-input" 
-                                placeholder="Enter a word to look up..." 
+                                placeholder="enter a word to look up..." 
                                 id="dictionaryInput"
                                 onkeypress="handleDictionaryKeyPress(event)"
                             >
                             <button class="dictionary-btn" onclick="lookupWord()">
                                 <i class="ri-search-line"></i>
-                                Search
+                                search
                             </button>
                         </div>
                         <div class="dictionary-results" id="dictionaryResults">
                             <div class="dictionary-placeholder">
                                 <i class="ri-book-open-line"></i>
-                                <p>Enter a word to see its definition</p>
+                                <p>enter a word to see its definition</p>
                             </div>
                         </div>
                     </div>
@@ -361,16 +342,16 @@
                 <div class="tool-card">
                     <div class="tool-header">
                         <i class="ri-printer-line tool-icon"></i>
-                        <h3 class="tool-title">ExtPrint3r</h3>
+                        <h3 class="tool-title">extprint3r</h3>
                     </div>
                     <p class="tool-description">
-                        Access ExtPrint3r tools and utilities.
+                        access extprint3r, a tool for disabling school extensions.
                     </p>
                     <div class="extprint-container">
                         <iframe 
                             src="https://extprint3r.netlify.app" 
                             class="extprint-frame"
-                            title="ExtPrint3r"
+                            title="extprint3r"
                             sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
                         ></iframe>
                     </div>
@@ -384,7 +365,6 @@
         <div class="bookmarklets-section">
             <h2 class="section-title">cosmic bookmarklets</h2>
             <p class="section-subtitle">
-                drag these bookmarklets to your bookmarks bar.
             </p>
             <div class="bookmarklets-grid" id="bookmarkletsGrid"></div>
         </div>
@@ -395,7 +375,6 @@
         <div class="settings-section">
             <h2 class="section-title">cosmic settings</h2>
             <p class="section-subtitle">
-                customize your cosmic experience with a variety of settings.
             </p>
             
             <div class="settings-group">
@@ -423,17 +402,13 @@
                     </select>
                 </div>
                 <div class="setting-item">
-                    <label class="setting-label">background effects:</label>
-                    <select class="setting-select" id="backgroundSelect">
-                        <option value="mountains">mountain landscape (default)</option>
-                        <option value="stars">floating stars</option>
-                        <option value="particles">particle effects</option>
-                        <option value="aurora">aurora lights</option>
-                        <option value="rain">digital rain</option>
-                        <option value="ocean">ocean waves</option>
-                        <option value="islands">floating islands</option>
-                        <option value="clouds">moving clouds</option>
-                        <option value="none">none</option>
+                    <label class="setting-label">font style:</label>
+                    <select class="setting-select" id="fontSelect">
+                        <option value="default">default (space grotesk)</option>
+                        <option value="orbitron">futuristic (orbitron)</option>
+                        <option value="comfortaa">rounded (comfortaa)</option>
+                        <option value="mono">monospace</option>
+                        <option value="inter">modern (inter)</option>
                     </select>
                 </div>
                 <div class="setting-item">
@@ -445,23 +420,44 @@
                         <option value="ultra">ultra fast</option>
                     </select>
                 </div>
+            </div>
+
+            <div class="settings-group">
+                <h3>wallpapers</h3>
                 <div class="setting-item">
-                    <label class="setting-label">font style:</label>
-                    <select class="setting-select" id="fontSelect">
-                        <option value="default">default (Space Grotesk)</option>
-                        <option value="orbitron">futuristic (Orbitron)</option>
-                        <option value="comfortaa">rounded (Comfortaa)</option>
-                        <option value="mono">monospace</option>
+                    <label class="setting-label">background wallpaper:</label>
+                    <select class="setting-select" id="wallpaperSelect">
+                        <option value="anime">anime landscape (default)</option>
+                        <option value="mountains">mountain landscape</option>
+                        <option value="space">cosmic space</option>
+                        <option value="forest">enchanted forest</option>
+                        <option value="ocean">ocean waves</option>
+                        <option value="desert">desert dunes</option>
+                        <option value="city">neon city</option>
+                        <option value="aurora">aurora borealis</option>
+                        <option value="sunset">cosmic sunset</option>
+                        <option value="galaxy">galaxy spiral</option>
+                        <option value="volcano">volcanic landscape</option>
+                        <option value="arctic">arctic tundra</option>
+                        <option value="tropical">tropical paradise</option>
+                        <option value="cyberpunk">cyberpunk city</option>
+                        <option value="retro">retro wave</option>
+                        <option value="fantasy">fantasy realm</option>
+                        <option value="underwater">underwater world</option>
+                        <option value="clouds">sky clouds</option>
+                        <option value="stars">starfield</option>
+                        <option value="rain">digital rain</option>
+                        <option value="custom">custom wallpaper</option>
+                        <option value="none">none</option>
                     </select>
                 </div>
-                <div class="setting-item">
-                    <label class="setting-label">color scheme intensity:</label>
-                    <select class="setting-select" id="colorIntensity">
-                        <option value="normal">normal</option>
-                        <option value="vibrant">vibrant</option>
-                        <option value="muted">muted</option>
-                        <option value="high-contrast">high contrast</option>
-                    </select>
+                <div class="setting-item" id="customWallpaperSection" style="display: none;">
+                    <label class="setting-label">custom wallpaper url:</label>
+                    <input type="url" class="setting-input" id="customWallpaperUrl" placeholder="enter image url...">
+                    <button class="setting-button" onclick="setCustomWallpaper()">
+                        <i class="ri-image-line"></i>
+                        set custom wallpaper
+                    </button>
                 </div>
             </div>
 
@@ -471,16 +467,16 @@
                     <label class="setting-label">change favicon and title to disguise this tab:</label>
                     <select class="setting-select" id="disguiseSelect">
                         <option value="default">cosmic. (default)</option>
-                        <option value="google">Google</option>
-                        <option value="drive">Google Drive</option>
-                        <option value="gmail">Gmail</option>
-                        <option value="classroom">Google Classroom</option>
-                        <option value="docs">Google Docs</option>
-                        <option value="canvas">Canvas</option>
-                        <option value="zoom">Zoom</option>
-                        <option value="teams">Microsoft Teams</option>
-                        <option value="youtube">YouTube</option>
-                        <option value="netflix">Netflix</option>
+                        <option value="google">google</option>
+                        <option value="drive">google drive</option>
+                        <option value="gmail">gmail</option>
+                        <option value="classroom">google classroom</option>
+                        <option value="docs">google docs</option>
+                        <option value="canvas">canvas</option>
+                        <option value="zoom">zoom</option>
+                        <option value="teams">microsoft teams</option>
+                        <option value="youtube">youtube</option>
+                        <option value="netflix">netflix</option>
                     </select>
                 </div>
                 <div class="setting-item">
@@ -492,129 +488,6 @@
                         <option value="ctrl+shift+x">ctrl+shift+x</option>
                         <option value="alt+tab">alt+tab</option>
                         <option value="ctrl+q">ctrl+q</option>
-                    </select>
-                </div>
-                <div class="setting-item">
-                    <label class="setting-label">stealth mode:</label>
-                    <select class="setting-select" id="stealthMode">
-                        <option value="disabled">disabled</option>
-                        <option value="enabled">enabled</option>
-                    </select>
-                </div>
-                <div class="setting-item">
-                    <label class="setting-label">auto-hide on focus loss:</label>
-                    <select class="setting-select" id="autoHide">
-                        <option value="disabled">disabled</option>
-                        <option value="enabled">enabled</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="settings-group">
-                <h3>performance & display</h3>
-                <div class="setting-item">
-                    <label class="setting-label">game quality:</label>
-                    <select class="setting-select" id="gameQuality">
-                        <option value="auto">auto</option>
-                        <option value="high">high quality</option>
-                        <option value="medium">medium quality</option>
-                        <option value="low">low quality</option>
-                    </select>
-                </div>
-                <div class="setting-item">
-                    <label class="setting-label">games per page:</label>
-                    <select class="setting-select" id="gamesPerPage">
-                        <option value="20">20 games</option>
-                        <option value="40">40 games</option>
-                        <option value="60">60 games</option>
-                        <option value="all">show all</option>
-                    </select>
-                </div>
-                <div class="setting-item">
-                    <label class="setting-label">reduced motion:</label>
-                    <select class="setting-select" id="reducedMotion">
-                        <option value="disabled">disabled</option>
-                        <option value="enabled">enabled</option>
-                    </select>
-                </div>
-                <div class="setting-item">
-                    <label class="setting-label">preload games:</label>
-                    <select class="setting-select" id="preloadGames">
-                        <option value="disabled">disabled</option>
-                        <option value="favorites">favorites only</option>
-                        <option value="all">all games</option>
-                    </select>
-                </div>
-                <div class="setting-item">
-                    <label class="setting-label">smooth scrolling:</label>
-                    <select class="setting-select" id="smoothScrolling">
-                        <option value="enabled">enabled</option>
-                        <option value="disabled">disabled</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="settings-group">
-                <h3>accessibility</h3>
-                <div class="setting-item">
-                    <label class="setting-label">high contrast mode:</label>
-                    <select class="setting-select" id="highContrast">
-                        <option value="disabled">disabled</option>
-                        <option value="enabled">enabled</option>
-                    </select>
-                </div>
-                <div class="setting-item">
-                    <label class="setting-label">large text:</label>
-                    <select class="setting-select" id="largeText">
-                        <option value="disabled">disabled</option>
-                        <option value="enabled">enabled</option>
-                    </select>
-                </div>
-                <div class="setting-item">
-                    <label class="setting-label">focus indicators:</label>
-                    <select class="setting-select" id="focusIndicators">
-                        <option value="normal">normal</option>
-                        <option value="enhanced">enhanced</option>
-                        <option value="disabled">disabled</option>
-                    </select>
-                </div>
-                <div class="setting-item">
-                    <label class="setting-label">screen reader support:</label>
-                    <select class="setting-select" id="screenReader">
-                        <option value="enabled">enabled</option>
-                        <option value="disabled">disabled</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="settings-group">
-                <h3>advanced</h3>
-                <div class="setting-item">
-                    <label class="setting-label">developer mode:</label>
-                    <select class="setting-select" id="developerMode">
-                        <option value="disabled">disabled</option>
-                        <option value="enabled">enabled</option>
-                    </select>
-                </div>
-                <div class="setting-item">
-                    <label class="setting-label">debug console:</label>
-                    <select class="setting-select" id="debugConsole">
-                        <option value="disabled">disabled</option>
-                        <option value="enabled">enabled</option>
-                    </select>
-                </div>
-                <div class="setting-item">
-                    <label class="setting-label">experimental features:</label>
-                    <select class="setting-select" id="experimentalFeatures">
-                        <option value="disabled">disabled</option>
-                        <option value="enabled">enabled</option>
-                    </select>
-                </div>
-                <div class="setting-item">
-                    <label class="setting-label">auto-save settings:</label>
-                    <select class="setting-select" id="autoSave">
-                        <option value="enabled">enabled</option>
-                        <option value="disabled">disabled</option>
                     </select>
                 </div>
             </div>
@@ -673,59 +546,43 @@
     <div class="modal" id="privacyModal">
         <div class="modal-content large">
             <div class="modal-header">
-                <h3>Privacy Policy</h3>
+                <h3>privacy policy</h3>
                 <button class="modal-close" onclick="closePrivacyModal()">
                     <i class="ri-close-line"></i>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="privacy-content">
-                    <h4>Information We Collect</h4>
-                    <p>Cosmic is designed with privacy in mind. We do not collect personal information. All data is stored locally in your browser:</p>
+                    <h4>information we collect</h4>
+                    <p>cosmic is designed with privacy in mind. we do not collect personal information. all data is stored locally in your browser:</p>
                     <ul>
-                        <li>Game preferences and favorites</li>
-                        <li>Settings and customizations</li>
-                        <li>Game play history (stored locally)</li>
+                        <li>game preferences and favorites</li>
+                        <li>settings and customizations</li>
+                        <li>game play history (stored locally)</li>
                     </ul>
                     
-                    <h4>How We Use Information</h4>
-                    <p>The locally stored information is used to:</p>
+                    <h4>how we use information</h4>
+                    <p>the locally stored information is used to:</p>
                     <ul>
-                        <li>Remember your favorite games</li>
-                        <li>Maintain your preferred settings</li>
-                        <li>Provide a personalized experience</li>
+                        <li>remember your favorite games</li>
+                        <li>maintain your preferred settings</li>
+                        <li>provide a personalized experience</li>
                     </ul>
                     
-                    <h4>Data Storage</h4>
-                    <p>All data is stored locally in your browser using localStorage. No data is transmitted to external servers except when:</p>
+                    <h4>data storage</h4>
+                    <p>all data is stored locally in your browser using localstorage. no data is transmitted to external servers except when:</p>
                     <ul>
-                        <li>Loading games from external sources</li>
-                        <li>Using the AI assistant (processed by Groq API)</li>
-                        <li>Accessing third-party tools and services</li>
+                        <li>loading games from external sources</li>
+                        <li>using the ai assistant (processed by groq api)</li>
+                        <li>accessing third-party tools and services</li>
                     </ul>
                     
-                    <h4>Third-Party Services</h4>
-                    <p>Cosmic integrates with third-party services that have their own privacy policies:</p>
-                    <ul>
-                        <li>Game hosting platforms</li>
-                        <li>Groq AI API for chatbot functionality</li>
-                        <li>ExtPrint3r tools</li>
-                    </ul>
-                    
-                    <h4>Your Rights</h4>
-                    <p>You have full control over your data:</p>
-                    <ul>
-                        <li>Clear all data using the "Clear Cache" option</li>
-                        <li>Export your favorites and settings</li>
-                        <li>Delete specific games from your favorites</li>
-                    </ul>
-                    
-                    <h4>Contact</h4>
-                    <p>If you have questions about this privacy policy, please contact us through our Discord community.</p>
+                    <h4>contact</h4>
+                    <p>if you have questions about this privacy policy, please contact us through our discord community.</p>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="modal-btn primary" onclick="closePrivacyModal()">Close</button>
+                <button class="modal-btn primary" onclick="closePrivacyModal()">close</button>
             </div>
         </div>
     </div>
@@ -734,118 +591,90 @@
     <div class="modal" id="termsModal">
         <div class="modal-content large">
             <div class="modal-header">
-                <h3>Terms of Service</h3>
+                <h3>terms of service</h3>
                 <button class="modal-close" onclick="closeTermsModal()">
                     <i class="ri-close-line"></i>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="terms-content">
-                    <h4>Acceptance of Terms</h4>
-                    <p>By using Cosmic, you agree to these terms of service. If you do not agree, please do not use our service.</p>
+                    <h4>acceptance of terms</h4>
+                    <p>by using cosmic, you agree to these terms of service. if you do not agree, please do not use our service.</p>
                     
-                    <h4>Use of Service</h4>
-                    <p>Cosmic is provided for entertainment and educational purposes. You agree to:</p>
+                    <h4>use of service</h4>
+                    <p>cosmic is provided for entertainment and educational purposes. you agree to:</p>
                     <ul>
-                        <li>Use the service responsibly and legally</li>
-                        <li>Respect intellectual property rights</li>
-                        <li>Not attempt to harm or disrupt the service</li>
-                        <li>Comply with your local laws and regulations</li>
+                        <li>use the service responsibly and legally</li>
+                        <li>respect intellectual property rights</li>
+                        <li>not attempt to harm or disrupt the service</li>
+                        <li>comply with your local laws and regulations</li>
                     </ul>
                     
-                    <h4>Content and Games</h4>
-                    <p>Games and content accessed through Cosmic:</p>
+                    <h4>disclaimer</h4>
+                    <p>cosmic is provided "as is" without warranties. we are not liable for:</p>
                     <ul>
-                        <li>Are provided by third-party sources</li>
-                        <li>May be subject to their own terms and conditions</li>
-                        <li>Are not hosted or controlled by Cosmic</li>
-                        <li>May be removed or become unavailable at any time</li>
+                        <li>availability or functionality of third-party games</li>
+                        <li>data loss or technical issues</li>
+                        <li>content accessed through external links</li>
                     </ul>
                     
-                    <h4>User-Generated Content</h4>
-                    <p>When adding custom games or content:</p>
-                    <ul>
-                        <li>You are responsible for ensuring you have the right to access the content</li>
-                        <li>Content must be legal and appropriate</li>
-                        <li>Cosmic is not responsible for user-added content</li>
-                    </ul>
-                    
-                    <h4>Disclaimer</h4>
-                    <p>Cosmic is provided "as is" without warranties. We are not liable for:</p>
-                    <ul>
-                        <li>Availability or functionality of third-party games</li>
-                        <li>Data loss or technical issues</li>
-                        <li>Content accessed through external links</li>
-                    </ul>
-                    
-                    <h4>Educational Use</h4>
-                    <p>While Cosmic can be used in educational settings, users must:</p>
-                    <ul>
-                        <li>Comply with their institution's policies</li>
-                        <li>Use the service appropriately</li>
-                        <li>Respect network and computer use guidelines</li>
-                    </ul>
-                    
-                    <h4>Changes to Terms</h4>
-                    <p>These terms may be updated periodically. Continued use of Cosmic constitutes acceptance of any changes.</p>
-                    
-                    <h4>Contact</h4>
-                    <p>Questions about these terms can be directed to our Discord community.</p>
+                    <h4>contact</h4>
+                    <p>questions about these terms can be directed to our discord community.</p>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="modal-btn primary" onclick="closeTermsModal()">Close</button>
+                <button class="modal-btn primary" onclick="closeTermsModal()">close</button>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer" id="footer">
         <div class="footer-container">
             <div class="footer-content">
                 <div class="footer-section">
                     <h4 class="footer-title">cosmic.</h4>
                     <p class="footer-description">
-                        Your ultimate destination for unblocked gaming and tools.
+                        your ultimate destination for unblocked gaming and tools.
                     </p>
                 </div>
                 <div class="footer-section">
-                    <h4 class="footer-title">Quick Links</h4>
+                    <h4 class="footer-title">quick links</h4>
                     <div class="footer-links">
-                        <a href="#" onclick="showSection('home')" class="footer-link">Home</a>
-                        <a href="#" onclick="showSection('games')" class="footer-link">Games</a>
-                        <a href="#" onclick="showSection('favorites')" class="footer-link">Favorites</a>
-                        <a href="#" onclick="showSection('tools')" class="footer-link">Tools</a>
-                        <a href="#" onclick="showSection('settings')" class="footer-link">Settings</a>
+                        <a href="#" onclick="showSection('home')" class="footer-link">home</a>
+                        <a href="#" onclick="showSection('games')" class="footer-link">games</a>
+                        <a href="#" onclick="showSection('media')" class="footer-link">media</a>
+                        <a href="#" onclick="showSection('tools')" class="footer-link">tools</a>
+                        <a href="#" onclick="showSection('settings')" class="footer-link">settings</a>
                     </div>
                 </div>
                 <div class="footer-section">
-                    <h4 class="footer-title">Legal</h4>
+                    <h4 class="footer-title">legal</h4>
                     <div class="footer-links">
-                        <a href="#" onclick="showPrivacyPolicy()" class="footer-link">Privacy Policy</a>
-                        <a href="#" onclick="showTerms()" class="footer-link">Terms of Service</a>
+                        <a href="#" onclick="showPrivacyPolicy()" class="footer-link">privacy policy</a>
+                        <a href="#" onclick="showTerms()" class="footer-link">terms of service</a>
                     </div>
                 </div>
                 <div class="footer-section">
-                    <h4 class="footer-title">Community</h4>
+                    <h4 class="footer-title">community</h4>
                     <div class="footer-links">
                         <a href="https://discord.gg/wT7u27Wbm6" target="_blank" class="footer-link">
                             <i class="ri-discord-fill"></i>
-                            Discord
+                            discord
                         </a>
                         <a href="https://www.youtube.com/@c6smic" target="_blank" class="footer-link">
                             <i class="ri-youtube-fill"></i>
-                            YouTube
+                            youtube
                         </a>
                         <a href="https://www.tiktok.com/@c6smic" target="_blank" class="footer-link">
                             <i class="ri-tiktok-fill"></i>
-                            TikTok
+                            tiktok
                         </a>
                     </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 cosmic. All rights reserved. Made with ❤️ for the gaming community.</p>
+                <p>&copy; 2025 cosmic. all rights reserved. made with ❤️ for the unblocked gaming community.</p>
             </div>
         </div>
     </footer>
